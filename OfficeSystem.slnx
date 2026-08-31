@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/src/" />
+  <Folder Name="/src/backend/">
+    <Project Path="src/backend/OfficeSystem.Api/OfficeSystem.Api.csproj" />
+    <Project Path="src/backend/OfficeSystem.Application/OfficeSystem.Application.csproj" />
+    <Project Path="src/backend/OfficeSystem.Domain/OfficeSystem.Domain.csproj" />
+    <Project Path="src/backend/OfficeSystem.Infrastructure/OfficeSystem.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/OfficeSystem.Application.Tests/OfficeSystem.Application.Tests.csproj" />
+    <Project Path="tests/OfficeSystem.Domain.Tests/OfficeSystem.Domain.Tests.csproj" />
+  </Folder>
+</Solution>

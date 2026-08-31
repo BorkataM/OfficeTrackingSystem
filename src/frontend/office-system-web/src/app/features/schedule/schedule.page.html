@@ -1,0 +1,240 @@
+<header class="page-head">
+  <div class="page-title">
+    <h1>{{ teams.selected()?.name ?? 'Schedule' }}</h1>
+    <p class="muted">
+      Week {{ weekNumber() }} · {{ weekLabel() }}
+      @if (isCurrentWeek()) {
+        <span class="badge badge-brand">This week</span>
+      }
+    </p>
+  </div>
+
+  <div class="head-actions">
+    <div class="weeknav">
+      <button type="button" class="btn btn-icon btn-secondary" (click)="previousWeek()" aria-label="Previous week">
+        <app-icon name="chevron-left" [size]="17" />
+      </button>
+      <button type="button" class="btn btn-secondary btn-sm today" (click)="thisWeek()" [disabled]="isCurrentWeek()">
+        Today
+      </button>
+      <button type="button" class="btn btn-icon btn-secondary" (click)="nextWeek()" aria-label="Next week">
+        <app-icon name="chevron-right" [size]="17" />
+      </button>
+    </div>
+
+    <button
+      type="button"
+      class="btn btn-secondary btn-sm"
+      (click)="toggleWeekends()"
+      [attr.aria-pressed]="includeWeekends()"
+    >
+      {{ includeWeekends() ? 'Hide weekends' : 'Show weekends' }}
+    </button>
+
+    <div class="quick">
+      <button
+        type="button"
+        class="btn btn-primary btn-sm"
+        (click)="quickOpen.set(!quickOpen())"
+        [disabled]="saving() || !view()"
+        [attr.aria-expanded]="quickOpen()"
+      >
+        <app-icon name="sparkles" [size]="15" />
+        Plan my week
+        <app-icon name="chevron-down" [size]="14" />
+      </button>
+
+      @if (quickOpen()) {
+        <div class="quick-menu popover">
+          <p class="menu-label">Mark every weekday as</p>
+          @for (option of statuses; track option.status) {
+            <button type="button" class="quick-item" (click)="fillWeekdays(option.status)">
+              <span class="chip" [class]="option.cssClass"><span class="chip-dot"></span>{{ option.label }}</span>
+            </button>
+          }
+          <div class="menu-divider"></div>
+          <button type="button" class="quick-item plain" (click)="copyPreviousWeek()">
+            <app-icon name="copy" [size]="16" />
+            Copy last week
+          </button>
+          <button type="button" class="quick-item plain danger" (click)="clearWeek()">
+            <app-icon name="trash" [size]="16" />
+            Clear my week
+          </button>
+        </div>
+      }
+    </div>
+  </div>
+</header>
+
+@if (error(); as message) {
+  <div class="card card-pad state-card">
+    <p class="form-error"><app-icon name="alert" [size]="16" /><span>{{ message }}</span></p>
+  </div>
+} @else if (loading() && !view()) {
+  <div class="card grid-card">
+    <div class="skeleton-grid">
+      @for (line of [0, 1, 2, 3, 4, 5]; track line) {
+        <div class="skeleton" [style.height.px]="line === 0 ? 64 : 52"></div>
+      }
+    </div>
+  </div>
+} @else if (view(); as model) {
+  @if (model.rows.length === 0) {
+    <div class="card state-card">
+      <div class="empty">
+        <span class="empty-icon"><app-icon name="users" [size]="22" /></span>
+        <h3>This team has no members yet</h3>
+        <p>Share the invite code from the team page to get people in.</p>
+      </div>
+    </div>
+  } @else {
+    <div class="card grid-card" [class.busy]="loading() || saving()">
+      <div class="grid-scroll">
+        <div
+          class="grid"
+          [style.--columns]="model.columns.length"
+          role="table"
+          [attr.aria-label]="'Attendance for week ' + weekLabel()"
+        >
+          <!-- Header row -->
+          <div class="cell corner" role="columnheader">
+            <span class="corner-label">{{ model.memberCount }} people</span>
+          </div>
+
+          @for (column of model.columns; track column.date) {
+            <button
+              type="button"
+              class="cell day-head"
+              [class.today]="column.isToday"
+              [class.weekend]="column.isWeekend"
+              [class.past]="column.isPast"
+              [class.picked]="selectedDay() === column.date"
+              (click)="selectDay(column.date)"
+              role="columnheader"
+            >
+              <span class="day-weekday">{{ column.weekday }}</span>
+              <span class="day-number">{{ column.dayOfMonth }}</span>
+              <span class="day-occupancy">
+                <app-icon name="building" [size]="12" />
+                {{ column.totals.inOffice }}
+              </span>
+              <span class="occupancy-bar">
+                <span class="occupancy-fill" [style.width.%]="column.officeShare * 100"></span>
+              </span>
+            </button>
+          }
+
+          <!-- Member rows -->
+          @for (row of model.rows; track row.member.userId) {
+            <div class="cell member" [class.me]="row.isMe" role="rowheader">
+              <app-avatar [name]="row.member.displayName" [color]="row.member.accentColor" size="sm" />
+              <span class="member-text">
+                <span class="member-name truncate">
+                  {{ row.isMe ? 'You' : row.member.displayName }}
+                  @if (row.member.role === 'Owner') {
+                    <app-icon name="crown" [size]="13" class="role-mark" />
+                  } @else if (row.member.role === 'Admin') {
+                    <app-icon name="shield" [size]="13" class="role-mark" />
+                  }
+                </span>
+                <span class="member-meta">{{ row.officeDays }} office · {{ row.plannedDays }} planned</span>
+              </span>
+            </div>
+
+            @for (cell of row.cells; track cell.date) {
+              @if (row.isMe) {
+                <div class="cell slot editable" [class.weekend]="cell.isWeekend" [class.today]="cell.isToday">
+                  <button
+                    #slot
+                    type="button"
+                    class="slot-button"
+                    [class]="cell.status ? describe(cell.status).cssClass : 'status-unplanned'"
+                    [class.open]="editing()?.date === cell.date"
+                    (click)="openPicker(cell.date, slot)"
+                    [attr.aria-label]="
+                      (cell.status ? describe(cell.status).label : 'Not planned') + ' on ' + cell.date
+                    "
+                    [attr.title]="cell.note ?? (cell.status ? describe(cell.status).label : 'Click to plan')"
+                  >
+                    @if (cell.status) {
+                      <span class="chip-dot"></span>
+                      <span class="slot-label">{{ describe(cell.status).label }}</span>
+                    } @else {
+                      <app-icon name="plus" [size]="14" />
+                    }
+                    @if (cell.note) {
+                      <span class="note-mark" aria-hidden="true"></span>
+                    }
+                  </button>
+                </div>
+              } @else {
+                <div
+                  class="cell slot"
+                  [class.weekend]="cell.isWeekend"
+                  [class.today]="cell.isToday"
+                  role="cell"
+                >
+                  <span
+                    class="slot-static"
+                    [class]="cell.status ? describe(cell.status).cssClass : 'status-unplanned'"
+                    [attr.title]="cell.note ?? (cell.status ? describe(cell.status).label : 'Not planned')"
+                  >
+                    @if (cell.status) {
+                      <span class="chip-dot"></span>
+                      <span class="slot-label">{{ describe(cell.status).label }}</span>
+                    } @else {
+                      <span class="slot-label subtle">–</span>
+                    }
+                    @if (cell.note) {
+                      <span class="note-mark" aria-hidden="true"></span>
+                    }
+                  </span>
+                </div>
+              }
+            }
+          }
+        </div>
+      </div>
+
+      <footer class="grid-legend">
+        @for (option of statuses; track option.status) {
+          <span class="chip" [class]="option.cssClass"><span class="chip-dot"></span>{{ option.label }}</span>
+        }
+        <span class="chip status-unplanned"><span class="chip-dot"></span>Not planned</span>
+        <span class="grow"></span>
+        <span class="legend-hint">Click any cell in your own row to plan it.</span>
+      </footer>
+    </div>
+
+    @if (selectedDay(); as day) {
+      <app-day-roster-panel
+        [teamId]="teams.selectedId()!"
+        [date]="day"
+        [today]="model.today"
+        (closed)="selectedDay.set(null)"
+      />
+    }
+
+    <app-attendance-statistics [teamId]="teams.selectedId()!" [reloadToken]="dataVersion()" />
+  }
+}
+
+<!--
+  Rendered at the page root rather than inside the cell: AnchoredTo pins it to the
+  clicked cell with fixed coordinates, so the grid's scroll container can neither
+  clip it nor drag the table around when the popover itself is scrolled.
+-->
+@if (editing(); as target) {
+  <div class="picker-layer popover" [appAnchoredTo]="target.anchor">
+    <app-status-picker
+      [date]="target.date"
+      [today]="today()"
+      [current]="planFor(target.date).status"
+      [note]="planFor(target.date).note"
+      (picked)="pick(target.date, $event)"
+      (cleared)="clear(target.date)"
+      (dismissed)="closeOverlays()"
+    />
+  </div>
+}

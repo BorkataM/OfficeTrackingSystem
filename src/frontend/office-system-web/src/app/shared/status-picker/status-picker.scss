@@ -1,0 +1,141 @@
+:host {
+  display: block;
+  width: 296px;
+  padding: var(--space-4);
+}
+
+.head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+.day {
+  font-size: var(--text-md);
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.date {
+  color: var(--text-subtle);
+  font-size: var(--text-sm);
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text);
+  text-align: left;
+  transition:
+    background-color var(--duration-fast) var(--ease),
+    border-color var(--duration-fast) var(--ease);
+}
+
+.option:hover {
+  background: var(--surface-hover);
+}
+
+/* Selected picks up the status colour, so the choice is unmistakable. */
+.option.selected {
+  border-color: currentcolor;
+}
+
+.option.selected.status-office {
+  background: var(--status-office-soft);
+  color: var(--status-office-text);
+}
+
+.option.selected.status-remote {
+  background: var(--status-remote-soft);
+  color: var(--status-remote-text);
+}
+
+.option.selected.status-travelling {
+  background: var(--status-travelling-soft);
+  color: var(--status-travelling-text);
+}
+
+.option.selected.status-away {
+  background: var(--status-away-soft);
+  color: var(--status-away-text);
+}
+
+.option .chip-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex: none;
+}
+
+.option.status-office .chip-dot {
+  background: var(--status-office);
+}
+
+.option.status-remote .chip-dot {
+  background: var(--status-remote);
+}
+
+.option.status-travelling .chip-dot {
+  background: var(--status-travelling);
+}
+
+.option.status-away .chip-dot {
+  background: var(--status-away);
+}
+
+.option-text {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.option-label {
+  font-size: var(--text-base);
+  font-weight: 600;
+}
+
+.option-hint {
+  color: var(--text-subtle);
+  font-size: var(--text-xs);
+  line-height: 1.35;
+}
+
+.option.selected .option-hint {
+  color: inherit;
+  opacity: 0.75;
+}
+
+.note {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+}
+
+.note .input {
+  height: 34px;
+  font-size: var(--text-sm);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border);
+}

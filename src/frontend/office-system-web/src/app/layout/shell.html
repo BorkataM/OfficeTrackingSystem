@@ -1,0 +1,138 @@
+@if (navOpen()) {
+  <div class="nav-scrim scrim" (click)="closeNav()"></div>
+}
+
+<aside class="sidebar" [class.open]="navOpen()">
+  <div class="sidebar-top">
+    <a class="brand" routerLink="/" (click)="closeNav()">
+      <span class="brand-mark"><app-icon name="calendar" [size]="19" /></span>
+      <span class="brand-name">Office Days</span>
+    </a>
+
+    <button type="button" class="btn btn-icon btn-ghost close-nav" (click)="closeNav()" aria-label="Close menu">
+      <app-icon name="close" [size]="18" />
+    </button>
+  </div>
+
+  <!-- Team switcher -->
+  <div class="switcher">
+    @if (selectedTeam(); as team) {
+      <button
+        type="button"
+        class="switcher-trigger"
+        (click)="toggleSwitcher()"
+        [attr.aria-expanded]="switcherOpen()"
+      >
+        <span class="switcher-mark">{{ team.name.charAt(0).toUpperCase() }}</span>
+        <span class="switcher-text">
+          <span class="switcher-name truncate">{{ team.name }}</span>
+          <span class="switcher-meta">{{ team.memberCount }} members · {{ team.myRole }}</span>
+        </span>
+        <app-icon name="chevron-down" [size]="16" />
+      </button>
+    } @else {
+      <a class="switcher-trigger switcher-empty" routerLink="/teams" (click)="closeNav()">
+        <span class="switcher-mark"><app-icon name="plus" [size]="16" /></span>
+        <span class="switcher-text">
+          <span class="switcher-name">Choose a team</span>
+          <span class="switcher-meta">Create one or join with a code</span>
+        </span>
+      </a>
+    }
+
+    @if (switcherOpen()) {
+      <div class="switcher-menu popover">
+        <p class="menu-label">Your teams</p>
+        @for (team of teams.teams(); track team.id) {
+          <button
+            type="button"
+            class="menu-item"
+            [class.current]="team.id === teams.selectedId()"
+            (click)="chooseTeam(team.id)"
+          >
+            <span class="switcher-mark sm">{{ team.name.charAt(0).toUpperCase() }}</span>
+            <span class="grow truncate">{{ team.name }}</span>
+            @if (team.id === teams.selectedId()) {
+              <app-icon name="check" [size]="15" />
+            }
+          </button>
+        }
+        <div class="menu-divider"></div>
+        <a class="menu-item" routerLink="/teams" (click)="closeNav()">
+          <span class="switcher-mark sm ghost"><app-icon name="plus" [size]="14" /></span>
+          <span class="grow">Create or join a team</span>
+        </a>
+      </div>
+    }
+  </div>
+
+  <nav class="nav" aria-label="Main">
+    @if (selectedTeam()) {
+      <a class="nav-item" routerLink="/schedule" routerLinkActive="active" (click)="closeNav()">
+        <app-icon name="grid" [size]="18" />
+        <span>Team week</span>
+      </a>
+      <a class="nav-item" routerLink="/my-month" routerLinkActive="active" (click)="closeNav()">
+        <app-icon name="calendar" [size]="18" />
+        <span>My month</span>
+      </a>
+      <a class="nav-item" routerLink="/team" routerLinkActive="active" (click)="closeNav()">
+        <app-icon name="users" [size]="18" />
+        <span>{{ canManage() ? 'Manage team' : 'Team' }}</span>
+      </a>
+    }
+    <a class="nav-item" routerLink="/teams" routerLinkActive="active" (click)="closeNav()">
+      <app-icon name="building" [size]="18" />
+      <span>All teams</span>
+    </a>
+  </nav>
+
+  <div class="sidebar-bottom">
+    <button type="button" class="nav-item" (click)="theme.toggle()">
+      <app-icon [name]="theme.resolved() === 'dark' ? 'sun' : 'moon'" [size]="18" />
+      <span>{{ theme.resolved() === 'dark' ? 'Light mode' : 'Dark mode' }}</span>
+    </button>
+
+    @if (user(); as me) {
+      <div class="user-block">
+        <button
+          type="button"
+          class="user-trigger"
+          (click)="toggleUserMenu()"
+          [attr.aria-expanded]="userMenuOpen()"
+        >
+          <app-avatar [name]="me.displayName" [color]="me.accentColor" size="sm" />
+          <span class="user-text">
+            <span class="user-name truncate">{{ me.displayName }}</span>
+            <span class="user-email truncate">{{ me.email }}</span>
+          </span>
+          <app-icon name="chevron-down" [size]="15" />
+        </button>
+
+        @if (userMenuOpen()) {
+          <div class="user-menu popover">
+            <a class="menu-item" routerLink="/profile" (click)="closeNav()">
+              <app-icon name="user" [size]="16" />
+              <span class="grow">Your profile</span>
+            </a>
+            <div class="menu-divider"></div>
+            <button type="button" class="menu-item danger" (click)="signOut()">
+              <app-icon name="logout" [size]="16" />
+              <span class="grow">Sign out</span>
+            </button>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</aside>
+
+<main class="content">
+  <div class="content-inner">
+    <button type="button" class="btn btn-secondary open-nav" (click)="navOpen.set(true)" aria-label="Open menu">
+      <app-icon name="grid" [size]="18" />
+    </button>
+
+    <router-outlet />
+  </div>
+</main>

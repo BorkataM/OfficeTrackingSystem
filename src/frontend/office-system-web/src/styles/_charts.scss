@@ -1,0 +1,48 @@
+/*
+ * Chart series tokens.
+ *
+ * These are NOT the grid's chip colours. Chip colours are tuned for small text on
+ * a chip; chart marks are large fills judged against the chart surface, so each
+ * mode gets its own step of the same hue. Every value below was checked with the
+ * data-viz validator against this app's surfaces (light #ffffff, dark #141a2e):
+ * all-pairs CVD ΔE 9.3 light / 8.9 dark, normal-vision 23.3 / 21.1, all ≥ 3:1.
+ *
+ * Only Office, Remote and Travelling are categorical slots. "Away" is absence, not
+ * a peer category, so it wears the de-emphasis gray; "Not planned" is the unfilled
+ * track. A gray cannot be a categorical slot — it falls under the chroma floor and
+ * would be indistinguishable from its neighbour.
+ */
+
+:root {
+  --chart-office: #059669;
+  --chart-remote: #4f46e5;
+  --chart-travelling: #b45309;
+  /* Context, not a series. */
+  --chart-away: #8a92a6;
+  /* The unfilled remainder of a track. */
+  --chart-track: #eceef5;
+  --chart-grid: #e3e6ef;
+  --chart-axis: #cdd2e0;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --chart-office: #0e9f70;
+    --chart-remote: #6366f1;
+    --chart-travelling: #cc7c06;
+    --chart-away: #64748b;
+    --chart-track: #1f2740;
+    --chart-grid: #232c44;
+    --chart-axis: #33405e;
+  }
+}
+
+:root[data-theme='dark'] {
+  --chart-office: #0e9f70;
+  --chart-remote: #6366f1;
+  --chart-travelling: #cc7c06;
+  --chart-away: #64748b;
+  --chart-track: #1f2740;
+  --chart-grid: #232c44;
+  --chart-axis: #33405e;
+}

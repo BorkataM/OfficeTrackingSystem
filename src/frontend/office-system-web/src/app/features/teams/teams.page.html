@@ -1,0 +1,183 @@
+<header class="page-head">
+  <div>
+    <h1>Your teams</h1>
+    <p class="muted">A team is a group whose office week you plan together.</p>
+  </div>
+
+  @if (teams.hasTeams() && mode() === 'none') {
+    <div class="row gap-2">
+      <button type="button" class="btn btn-secondary" (click)="show('join')">
+        <app-icon name="link" [size]="16" />
+        Join with a code
+      </button>
+      <button type="button" class="btn btn-primary" (click)="show('create')">
+        <app-icon name="plus" [size]="16" />
+        New team
+      </button>
+    </div>
+  }
+</header>
+
+<!-- Create / join forms -->
+@if (mode() === 'create') {
+  <section class="card card-pad form-card">
+    <div class="panel-title">
+      <div>
+        <h2>Create a team</h2>
+        <p class="muted text-sm">You become its owner and get an invite code to share.</p>
+      </div>
+      <button type="button" class="btn btn-icon btn-ghost" (click)="show('none')" aria-label="Cancel">
+        <app-icon name="close" [size]="18" />
+      </button>
+    </div>
+
+    @if (createError(); as message) {
+      <p class="form-error"><app-icon name="alert" [size]="16" /><span>{{ message }}</span></p>
+    }
+
+    <form [formGroup]="createForm" (ngSubmit)="create()" novalidate>
+      <div class="field">
+        <label class="label" for="team-name">Team name</label>
+        <input
+          id="team-name"
+          class="input"
+          type="text"
+          formControlName="name"
+          placeholder="Platform Team"
+          maxlength="80"
+          [class.invalid]="createForm.controls.name.touched && createForm.controls.name.invalid"
+        />
+      </div>
+
+      <div class="field">
+        <label class="label" for="team-description">What does this team do? <span class="subtle">(optional)</span></label>
+        <textarea
+          id="team-description"
+          class="textarea"
+          formControlName="description"
+          maxlength="280"
+          placeholder="Backend, infrastructure and everything that keeps the lights on."
+        ></textarea>
+      </div>
+
+      <div class="row gap-2">
+        <button type="submit" class="btn btn-primary" [disabled]="busy()">
+          {{ busy() ? 'Creating…' : 'Create team' }}
+        </button>
+        <button type="button" class="btn btn-ghost" (click)="show('none')">Cancel</button>
+      </div>
+    </form>
+  </section>
+} @else if (mode() === 'join') {
+  <section class="card card-pad form-card">
+    <div class="panel-title">
+      <div>
+        <h2>Join a team</h2>
+        <p class="muted text-sm">Ask an admin for the team's 8-character invite code.</p>
+      </div>
+      <button type="button" class="btn btn-icon btn-ghost" (click)="show('none')" aria-label="Cancel">
+        <app-icon name="close" [size]="18" />
+      </button>
+    </div>
+
+    @if (joinError(); as message) {
+      <p class="form-error"><app-icon name="alert" [size]="16" /><span>{{ message }}</span></p>
+    }
+
+    <form [formGroup]="joinForm" (ngSubmit)="join()" novalidate>
+      <div class="field">
+        <label class="label" for="join-code">Invite code</label>
+        <input
+          id="join-code"
+          class="input code-input"
+          type="text"
+          formControlName="joinCode"
+          (input)="normaliseJoinCode()"
+          placeholder="ABCD2345"
+          autocomplete="off"
+          spellcheck="false"
+          maxlength="8"
+          [class.invalid]="joinForm.controls.joinCode.touched && joinForm.controls.joinCode.invalid"
+        />
+        <span class="field-hint">Letters and digits only — the code is not case sensitive.</span>
+      </div>
+
+      <div class="row gap-2">
+        <button type="submit" class="btn btn-primary" [disabled]="busy()">
+          {{ busy() ? 'Joining…' : 'Join team' }}
+        </button>
+        <button type="button" class="btn btn-ghost" (click)="show('none')">Cancel</button>
+      </div>
+    </form>
+  </section>
+}
+
+<!-- Team list -->
+@if (teams.loading() && !teams.loaded()) {
+  <div class="team-grid">
+    @for (placeholder of [0, 1, 2]; track placeholder) {
+      <div class="skeleton" style="height: 132px; border-radius: var(--radius-lg)"></div>
+    }
+  </div>
+} @else if (teams.hasTeams()) {
+  <div class="team-grid">
+    @for (team of teams.teams(); track team.id) {
+      <button
+        type="button"
+        class="team-card"
+        [class.current]="team.id === teams.selectedId()"
+        (click)="open(team.id)"
+      >
+        <div class="team-top">
+          <span class="team-mark">{{ team.name.charAt(0).toUpperCase() }}</span>
+          <span class="badge">{{ team.myRole }}</span>
+        </div>
+
+        <h3 class="truncate">{{ team.name }}</h3>
+        <p class="team-desc">{{ team.description || 'No description yet.' }}</p>
+
+        <footer class="team-foot">
+          <span class="row gap-1">
+            <app-icon name="users" [size]="14" />
+            {{ team.memberCount }} {{ team.memberCount === 1 ? 'member' : 'members' }}
+          </span>
+          <span class="team-open">
+            Open
+            <app-icon name="chevron-right" [size]="14" />
+          </span>
+        </footer>
+      </button>
+    }
+  </div>
+} @else if (mode() === 'none') {
+  <section class="card onboarding">
+    <div class="empty">
+      <span class="empty-icon"><app-icon name="building" [size]="24" /></span>
+      <h2>Start with a team</h2>
+      <p>
+        Everything in Office Days hangs off a team: you plan your days inside one, and see
+        everyone else's alongside your own.
+      </p>
+    </div>
+
+    <div class="onboarding-choices">
+      <button type="button" class="choice" (click)="show('create')">
+        <span class="choice-icon"><app-icon name="plus" [size]="18" /></span>
+        <span class="choice-text">
+          <span class="choice-title">Create a team</span>
+          <span class="choice-hint">You will own it and can invite people with a code.</span>
+        </span>
+        <app-icon name="chevron-right" [size]="16" />
+      </button>
+
+      <button type="button" class="choice" (click)="show('join')">
+        <span class="choice-icon"><app-icon name="link" [size]="18" /></span>
+        <span class="choice-text">
+          <span class="choice-title">Join an existing team</span>
+          <span class="choice-hint">Paste the 8-character invite code you were given.</span>
+        </span>
+        <app-icon name="chevron-right" [size]="16" />
+      </button>
+    </div>
+  </section>
+}

@@ -1,0 +1,359 @@
+:host {
+  display: block;
+  margin-top: var(--space-8);
+}
+
+/* ---------- Header + period filter ---------- */
+
+.stats-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.stats-head h2 {
+  font-size: var(--text-xl);
+}
+
+.stats-head p {
+  margin-top: var(--space-1);
+}
+
+.periods {
+  display: flex;
+  gap: 3px;
+  padding: 3px;
+  background: var(--surface-sunken);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+
+.period {
+  height: 30px;
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  font-weight: 550;
+  white-space: nowrap;
+  transition: background-color var(--duration-fast) var(--ease), color var(--duration-fast) var(--ease);
+}
+
+.period:hover {
+  color: var(--text);
+}
+
+.period.selected {
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-xs);
+}
+
+/* Held at reduced opacity while refetching — no skeleton flash, no layout jump. */
+.stats {
+  transition: opacity var(--duration) var(--ease);
+}
+
+.stats.refreshing {
+  opacity: 0.6;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-4);
+}
+
+/* ---------- KPI row ---------- */
+
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(196px, 1fr));
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.kpi {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-5);
+}
+
+.kpi-label {
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  font-weight: 550;
+}
+
+.kpi-value {
+  /* Proportional figures: a standalone number should not look loose. */
+  font-size: var(--text-3xl);
+  font-weight: 650;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+
+.kpi-note {
+  color: var(--text-subtle);
+  font-size: var(--text-xs);
+  line-height: 1.45;
+}
+
+.meter {
+  display: block;
+  height: 5px;
+  margin: var(--space-2) 0 var(--space-1);
+  background: var(--chart-track);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+
+.meter-fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--chart-office);
+  transition: width var(--duration-slow) var(--ease);
+}
+
+/* ---------- Panels ---------- */
+
+.panels {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.panel {
+  min-width: 0;
+}
+
+.panel.wide {
+  margin-bottom: var(--space-4);
+}
+
+.panel h3 {
+  font-size: var(--text-md);
+}
+
+.panel-note {
+  margin-top: 2px;
+  margin-bottom: var(--space-5);
+  line-height: 1.5;
+}
+
+.panel-header {
+  padding: var(--space-5) var(--space-5) var(--space-4);
+  border-bottom: 1px solid var(--border);
+}
+
+.panel-header .panel-note {
+  margin-bottom: 0;
+}
+
+/* ---------- Status mix ---------- */
+
+.mix {
+  display: grid;
+  grid-template-columns: minmax(0, 168px) minmax(0, 1fr);
+  gap: var(--space-5);
+  align-items: center;
+}
+
+.legend {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.legend li {
+  display: grid;
+  grid-template-columns: 10px minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) 0;
+  font-size: var(--text-sm);
+}
+
+.swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+}
+
+.legend-label {
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.legend-value {
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}
+
+.legend-share {
+  min-width: 3.2ch;
+  color: var(--text-subtle);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+@media (width < 420px) {
+  .mix {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- Leaderboard ---------- */
+
+.leaderboard {
+  display: flex;
+  flex-direction: column;
+}
+
+.leaderboard li {
+  display: grid;
+  grid-template-columns: 22px 26px minmax(96px, 1.1fr) minmax(80px, 2fr) 40px 46px;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-5);
+}
+
+.leaderboard li + li {
+  border-top: 1px solid var(--border);
+}
+
+.leaderboard li:hover {
+  background: var(--surface-hover);
+}
+
+.leaderboard .empty-row {
+  display: block;
+  padding: var(--space-6) var(--space-5);
+  text-align: center;
+}
+
+.rank {
+  color: var(--text-subtle);
+  font-size: var(--text-sm);
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.who {
+  font-size: var(--text-base);
+  font-weight: 550;
+}
+
+.bar-track {
+  height: 8px;
+  background: var(--chart-track);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+
+/* One series, one colour: bar length already encodes the magnitude. */
+.bar-fill {
+  display: block;
+  height: 100%;
+  min-width: 2px;
+  border-radius: var(--radius-pill);
+  background: var(--chart-office);
+  transition: width var(--duration-slow) var(--ease);
+}
+
+.days {
+  font-size: var(--text-base);
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.of {
+  color: var(--text-subtle);
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+@media (width < 700px) {
+  .leaderboard li {
+    grid-template-columns: 22px 26px minmax(0, 1fr) 40px 46px;
+  }
+
+  .bar-track {
+    display: none;
+  }
+}
+
+/* ---------- Breakdown table ---------- */
+
+.table-scroll {
+  overflow-x: auto;
+}
+
+.breakdown {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-base);
+}
+
+.breakdown th,
+.breakdown td {
+  padding: var(--space-3) var(--space-4);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.breakdown thead th {
+  color: var(--text-subtle);
+  font-size: var(--text-xs);
+  font-weight: 650;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.breakdown tbody th {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-weight: 550;
+  min-width: 0;
+}
+
+.breakdown tbody tr {
+  border-top: 1px solid var(--border);
+}
+
+.breakdown tbody tr:hover {
+  background: var(--surface-hover);
+}
+
+.breakdown .num {
+  /* Columns of figures align, so tabular figures earn their place here. */
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.breakdown .strong {
+  font-weight: 650;
+}
+
+.breakdown tfoot tr {
+  border-top: 1px solid var(--border-strong);
+}
+
+.breakdown tfoot th,
+.breakdown tfoot td {
+  color: var(--text-muted);
+  font-weight: 650;
+}

@@ -1,0 +1,225 @@
+@if (error(); as message) {
+  <div class="card card-pad">
+    <p class="form-error"><app-icon name="alert" [size]="16" /><span>{{ message }}</span></p>
+  </div>
+} @else if (loading() && !team()) {
+  <div class="stack gap-4">
+    <div class="skeleton" style="height: 128px; border-radius: var(--radius-lg)"></div>
+    <div class="skeleton" style="height: 280px; border-radius: var(--radius-lg)"></div>
+  </div>
+} @else if (team(); as data) {
+  <header class="page-head">
+    <div class="head-main">
+      <span class="team-mark">{{ data.name.charAt(0).toUpperCase() }}</span>
+      <div>
+        <h1>{{ data.name }}</h1>
+        <p class="muted">
+          {{ data.members.length }} {{ data.members.length === 1 ? 'member' : 'members' }}
+          · you are {{ data.myRole === 'Admin' ? 'an admin' : 'the ' + data.myRole.toLowerCase() }}
+        </p>
+      </div>
+    </div>
+
+    @if (canManage() && !editingDetails()) {
+      <button type="button" class="btn btn-secondary" (click)="startEditingDetails()">
+        <app-icon name="settings" [size]="16" />
+        Edit details
+      </button>
+    }
+  </header>
+
+  <!-- Details -->
+  <section class="card card-pad section">
+    @if (editingDetails()) {
+      <div class="panel-title">
+        <h2>Team details</h2>
+      </div>
+
+      <form [formGroup]="detailsForm" (ngSubmit)="saveDetails()" novalidate>
+        <div class="field">
+          <label class="label" for="detail-name">Name</label>
+          <input id="detail-name" class="input" type="text" formControlName="name" maxlength="80" />
+        </div>
+
+        <div class="field">
+          <label class="label" for="detail-description">Description</label>
+          <textarea
+            id="detail-description"
+            class="textarea"
+            formControlName="description"
+            maxlength="280"
+            placeholder="What does this team do?"
+          ></textarea>
+        </div>
+
+        <div class="row gap-2">
+          <button type="submit" class="btn btn-primary" [disabled]="busy()">
+            {{ busy() ? 'Saving…' : 'Save changes' }}
+          </button>
+          <button type="button" class="btn btn-ghost" (click)="editingDetails.set(false)">Cancel</button>
+        </div>
+      </form>
+    } @else {
+      <div class="panel-title">
+        <h2>About</h2>
+      </div>
+      <p class="about">{{ data.description || 'No description has been added yet.' }}</p>
+    }
+  </section>
+
+  <!-- Invite code -->
+  @if (data.joinCode; as code) {
+    <section class="card card-pad section invite">
+      <div class="invite-text">
+        <h2>Invite code</h2>
+        <p class="muted text-sm">
+          Anyone with this code can join the team. Issue a new one to lock out an old code.
+        </p>
+      </div>
+
+      <div class="invite-actions">
+        <code class="code-display">{{ code }}</code>
+        <button type="button" class="btn btn-secondary" (click)="copyJoinCode()">
+          <app-icon [name]="codeCopied() ? 'check' : 'copy'" [size]="16" />
+          {{ codeCopied() ? 'Copied' : 'Copy' }}
+        </button>
+        <button type="button" class="btn btn-ghost" (click)="regenerateJoinCode()" [disabled]="busy()">
+          <app-icon name="refresh" [size]="16" />
+          New code
+        </button>
+      </div>
+    </section>
+  }
+
+  <!-- Members -->
+  <section class="card section">
+    <div class="panel-title members-head">
+      <h2>Members</h2>
+      <span class="muted text-sm">Owner and admins can manage the team</span>
+    </div>
+
+    <ul class="members">
+      @for (member of data.members; track member.userId) {
+        <li class="member">
+          <app-avatar [name]="member.displayName" [color]="member.accentColor" size="lg" />
+
+          <div class="member-text">
+            <span class="member-name">
+              {{ member.displayName }}
+              @if (member.userId === myUserId()) {
+                <span class="badge">You</span>
+              }
+            </span>
+            <span class="member-email truncate">{{ member.email }}</span>
+          </div>
+
+          <span class="role" [class.role-owner]="member.role === 'Owner'" [class.role-admin]="member.role === 'Admin'">
+            @if (member.role === 'Owner') {
+              <app-icon name="crown" [size]="13" />
+            } @else if (member.role === 'Admin') {
+              <app-icon name="shield" [size]="13" />
+            }
+            {{ member.role }}
+          </span>
+
+          @if (canManage() && member.role !== 'Owner') {
+            <div class="member-actions">
+              @if (member.role === 'Member') {
+                <button
+                  type="button"
+                  class="btn btn-sm btn-secondary"
+                  (click)="changeRole(member, 'Admin')"
+                  [disabled]="busy()"
+                >
+                  Make admin
+                </button>
+              } @else {
+                <button
+                  type="button"
+                  class="btn btn-sm btn-secondary"
+                  (click)="changeRole(member, 'Member')"
+                  [disabled]="busy()"
+                >
+                  Make member
+                </button>
+              }
+
+              @if (isOwner()) {
+                <button
+                  type="button"
+                  class="btn btn-sm btn-secondary"
+                  (click)="ask({ kind: 'transfer', member })"
+                  [disabled]="busy()"
+                >
+                  <app-icon name="crown" [size]="14" />
+                  Make owner
+                </button>
+              }
+
+              @if (member.userId !== myUserId()) {
+                <button
+                  type="button"
+                  class="btn btn-sm btn-danger"
+                  (click)="ask({ kind: 'remove', member })"
+                  [disabled]="busy()"
+                  [attr.aria-label]="'Remove ' + member.displayName"
+                >
+                  <app-icon name="trash" [size]="14" />
+                </button>
+              }
+            </div>
+          }
+        </li>
+      }
+    </ul>
+  </section>
+
+  <!-- Danger zone -->
+  <section class="card card-pad section danger-zone">
+    <div>
+      <h2>{{ isOwner() ? 'Delete this team' : 'Leave this team' }}</h2>
+      <p class="muted text-sm">
+        {{
+          isOwner()
+            ? 'As the owner you cannot leave. Transfer ownership first, or delete the team outright.'
+            : 'Your attendance in this team will be deleted. You can rejoin with the invite code.'
+        }}
+      </p>
+    </div>
+
+    @if (isOwner()) {
+      <button type="button" class="btn btn-danger" (click)="ask({ kind: 'delete' })" [disabled]="busy()">
+        <app-icon name="trash" [size]="16" />
+        Delete team
+      </button>
+    } @else {
+      <button type="button" class="btn btn-danger" (click)="ask({ kind: 'leave' })" [disabled]="busy()">
+        <app-icon name="logout" [size]="16" />
+        Leave team
+      </button>
+    }
+  </section>
+
+  <!-- Confirmation dialog -->
+  @if (confirmation(); as pending) {
+    <div class="scrim" (click)="confirmation.set(null)"></div>
+    <div class="dialog popover" role="dialog" aria-modal="true">
+      <h3>{{ confirmTitle(pending) }}</h3>
+      <p class="muted">{{ confirmBody(pending) }}</p>
+
+      <div class="dialog-actions">
+        <button type="button" class="btn btn-secondary" (click)="confirmation.set(null)">Cancel</button>
+        <button
+          type="button"
+          class="btn"
+          [class.btn-danger]="isDestructive(pending)"
+          [class.btn-primary]="!isDestructive(pending)"
+          [disabled]="busy()"
+          (click)="confirm()"
+        >
+          {{ busy() ? 'Working…' : confirmAction(pending) }}
+        </button>
+      </div>
+    </div>
+  }
+}

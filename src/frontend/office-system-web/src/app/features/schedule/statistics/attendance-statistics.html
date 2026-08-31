@@ -1,0 +1,202 @@
+<header class="stats-head">
+  <div>
+    <h2>Team statistics</h2>
+    <p class="muted text-sm">
+      {{ rangeLabel() }} · weekdays only
+      @if (stats(); as data) {
+        · {{ data.workingDays }} working days · {{ data.memberCount }} people
+      }
+    </p>
+  </div>
+
+  <!-- One filter row, scoping every chart below it. -->
+  <div class="periods" role="group" aria-label="Statistics period">
+    @for (option of periods; track option.value) {
+      <button
+        type="button"
+        class="period"
+        [class.selected]="period() === option.value"
+        [attr.aria-pressed]="period() === option.value"
+        (click)="selectPeriod(option.value)"
+      >
+        {{ option.label }}
+      </button>
+    }
+  </div>
+</header>
+
+@if (error(); as message) {
+  <div class="card card-pad">
+    <p class="form-error"><app-icon name="alert" [size]="16" /><span>{{ message }}</span></p>
+  </div>
+} @else if (loading()) {
+  <div class="stats-grid">
+    @for (placeholder of [0, 1, 2, 3]; track placeholder) {
+      <div class="skeleton" style="height: 108px; border-radius: var(--radius-lg)"></div>
+    }
+  </div>
+} @else if (stats(); as data) {
+  <div class="stats" [class.refreshing]="refreshing()">
+    <!-- Headline numbers: a KPI row, not a chart. -->
+    <div class="kpis">
+      <div class="kpi card">
+        <span class="kpi-label">Average in the office</span>
+        <span class="kpi-value">{{ data.averageInOffice.toFixed(1) }}</span>
+        <span class="kpi-note">of {{ data.memberCount }} people, per working day</span>
+      </div>
+
+      <div class="kpi card">
+        <span class="kpi-label">Busiest day</span>
+        @if (data.busiest; as busiest) {
+          <span class="kpi-value">{{ busiest.inOffice }}</span>
+          <span class="kpi-note">in the office on {{ dayLabel(busiest.date) }}</span>
+        } @else {
+          <span class="kpi-value">—</span>
+          <span class="kpi-note">nothing planned yet</span>
+        }
+      </div>
+
+      <div class="kpi card">
+        <span class="kpi-label">Office share</span>
+        <span class="kpi-value">{{ percent(data.officeShareOfPlanned) }}</span>
+        <span class="kpi-note">of all planned days were in the office</span>
+      </div>
+
+      <div class="kpi card">
+        <span class="kpi-label">Days planned</span>
+        <span class="kpi-value">{{ percent(data.planningRate) }}</span>
+        <!-- A ratio against a limit: a meter, not a pie. -->
+        <span class="meter">
+          <span class="meter-fill" [style.width]="percent(data.planningRate)"></span>
+        </span>
+        <span class="kpi-note">{{ data.planned }} of {{ data.capacity }} person-days</span>
+      </div>
+    </div>
+
+    <div class="panels">
+      <!-- Part-to-whole -->
+      <section class="card card-pad panel">
+        <h3>How the team splits its week</h3>
+        <p class="panel-note muted text-sm">Share of the {{ data.planned }} planned person-days.</p>
+
+        <div class="mix">
+          <app-donut-chart [slices]="legend()" totalLabel="planned days" />
+
+          <ul class="legend">
+            @for (row of legend(); track row.key) {
+              <li>
+                <span class="swatch" [style.background]="row.color"></span>
+                <span class="legend-label">{{ row.label }}</span>
+                <span class="legend-value">{{ row.value }}</span>
+                <span class="legend-share">{{ row.percentage }}%</span>
+              </li>
+            }
+          </ul>
+        </div>
+      </section>
+
+      <!-- Ordinal cycle -->
+      <section class="card card-pad panel">
+        <h3>Best day to come in</h3>
+        <p class="panel-note muted text-sm">Average number of people in the office, by weekday.</p>
+        <app-column-chart [columns]="weekdayColumns()" unitLabel="people in the office" />
+      </section>
+    </div>
+
+    <!-- Trend over time -->
+    <section class="card card-pad panel wide">
+      <h3>Office attendance over time</h3>
+      <p class="panel-note muted text-sm">
+        People in the office each working day. Quietest day:
+        @if (data.quietest; as quietest) {
+          <strong>{{ quietest.inOffice }}</strong> on {{ dayLabel(quietest.date) }}.
+        } @else {
+          not enough data yet.
+        }
+      </p>
+      <app-trend-chart [points]="trendPoints()" unitLabel="in the office" />
+    </section>
+
+    <!-- Identity + magnitude: the leaderboard the request asked for -->
+    <section class="card panel wide">
+      <div class="panel-header">
+        <div>
+          <h3>Most in the office</h3>
+          <p class="panel-note muted text-sm">Ranked by office days over the period.</p>
+        </div>
+      </div>
+
+      <ol class="leaderboard">
+        @for (member of data.members; track member.userId; let rank = $index) {
+          <li>
+            <span class="rank">{{ rank + 1 }}</span>
+            <app-avatar [name]="member.displayName" [color]="member.accentColor" size="sm" />
+            <span class="who truncate">{{ member.displayName }}</span>
+
+            <span class="bar-track">
+              <span class="bar-fill" [style.width.%]="barWidth(member.office)"></span>
+            </span>
+
+            <span class="days">{{ member.office }}</span>
+            <span class="of">{{ percent(member.officeRate) }}</span>
+          </li>
+        } @empty {
+          <li class="empty-row muted">Nobody has planned anything in this period yet.</li>
+        }
+      </ol>
+    </section>
+
+    <!-- The table view: every figure above, exactly, without colour or hover -->
+    <section class="card panel wide">
+      <div class="panel-header">
+        <div>
+          <h3>Full breakdown</h3>
+          <p class="panel-note muted text-sm">Days per person over {{ data.workingDays }} working days.</p>
+        </div>
+      </div>
+
+      <div class="table-scroll">
+        <table class="breakdown">
+          <thead>
+            <tr>
+              <th scope="col">Person</th>
+              <th scope="col" class="num">In office</th>
+              <th scope="col" class="num">Remote</th>
+              <th scope="col" class="num">Travelling</th>
+              <th scope="col" class="num">Away</th>
+              <th scope="col" class="num">Planned</th>
+              <th scope="col" class="num">Office rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (member of data.members; track member.userId) {
+              <tr>
+                <th scope="row">
+                  <app-avatar [name]="member.displayName" [color]="member.accentColor" size="sm" />
+                  <span class="truncate">{{ member.displayName }}</span>
+                </th>
+                <td class="num strong">{{ member.office }}</td>
+                <td class="num">{{ member.remote }}</td>
+                <td class="num">{{ member.travelling }}</td>
+                <td class="num">{{ member.away }}</td>
+                <td class="num">{{ member.planned }}</td>
+                <td class="num">{{ percent(member.officeRate) }}</td>
+              </tr>
+            }
+          </tbody>
+          <tfoot>
+            <tr>
+              <th scope="row">Team total</th>
+              <td class="num strong">{{ data.totals.office }}</td>
+              <td class="num">{{ data.totals.remote }}</td>
+              <td class="num">{{ data.totals.travelling }}</td>
+              <td class="num">{{ data.totals.away }}</td>
+              <td class="num">{{ data.planned }}</td>
+              <td class="num">{{ percent(data.officeShareOfPlanned) }}</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </section>
+  </div>
+}

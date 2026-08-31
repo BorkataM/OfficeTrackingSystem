@@ -1,0 +1,165 @@
+:host {
+  display: none;
+  position: relative;
+  overflow: hidden;
+  padding: var(--space-12);
+  background:
+    radial-gradient(120% 90% at 8% 8%, #6366f1 0%, transparent 55%),
+    radial-gradient(100% 80% at 92% 20%, #8b5cf6 0%, transparent 55%),
+    linear-gradient(155deg, #1b1d4d 0%, #0d1030 55%, #090b22 100%);
+  color: #fff;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+@media (width >= 940px) {
+  :host {
+    display: flex;
+  }
+}
+
+/* A soft grid, so the panel reads as a planning surface rather than a poster. */
+:host::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgb(255 255 255 / 5%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(255 255 255 / 5%) 1px, transparent 1px);
+  background-size: 46px 46px;
+  mask-image: radial-gradient(80% 70% at 50% 40%, #000 30%, transparent 100%);
+  pointer-events: none;
+}
+
+:host > * {
+  position: relative;
+  z-index: 1;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--text-lg);
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  background: rgb(255 255 255 / 14%);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 18%);
+}
+
+.pitch h1 {
+  max-width: 18ch;
+  font-size: clamp(2rem, 3.4vw, 2.9rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+}
+
+.pitch p {
+  max-width: 42ch;
+  margin-top: var(--space-4);
+  color: rgb(255 255 255 / 72%);
+  font-size: var(--text-md);
+  line-height: 1.65;
+}
+
+.preview {
+  margin-top: var(--space-8);
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  background: rgb(255 255 255 / 7%);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 12%);
+  backdrop-filter: blur(8px);
+}
+
+.preview-head,
+.preview-row {
+  display: grid;
+  grid-template-columns: 96px repeat(5, 1fr);
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.preview-head {
+  margin-bottom: var(--space-3);
+  color: rgb(255 255 255 / 55%);
+  font-size: 0.6875rem;
+  font-weight: 650;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.preview-row + .preview-row {
+  margin-top: var(--space-2);
+}
+
+.preview-name {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: rgb(255 255 255 / 82%);
+  font-size: var(--text-sm);
+  font-weight: 500;
+}
+
+.preview-dot {
+  width: 18px;
+  height: 18px;
+  border-radius: var(--radius-pill);
+  flex: none;
+}
+
+.preview-cell {
+  height: 26px;
+  border-radius: var(--radius-xs);
+  background: rgb(255 255 255 / 8%);
+}
+
+.preview-cell.office {
+  background: rgb(52 211 153 / 78%);
+}
+
+.preview-cell.remote {
+  background: rgb(129 140 248 / 78%);
+}
+
+.preview-cell.travel {
+  background: rgb(251 191 36 / 72%);
+}
+
+.preview-cell.away {
+  background: rgb(148 163 184 / 45%);
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  margin-top: var(--space-6);
+  color: rgb(255 255 255 / 65%);
+  font-size: var(--text-sm);
+}
+
+.legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.legend i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.foot {
+  color: rgb(255 255 255 / 45%);
+  font-size: var(--text-sm);
+}

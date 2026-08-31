@@ -1,0 +1,39 @@
+# ---------- .NET ----------
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+*.user
+*.suo
+.vs/
+TestResults/
+*.trx
+*.coverage
+*.received.*
+
+# ---------- SQLite ----------
+*.db
+*.db-shm
+*.db-wal
+
+# ---------- Node / Angular ----------
+node_modules/
+dist/
+.angular/
+npm-debug.log*
+yarn-error.log*
+*.tsbuildinfo
+
+# ---------- Editors ----------
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# ---------- Local secrets ----------
+# Real signing keys and connection strings belong in user secrets or the
+# environment, never in the repository.
+appsettings.Local.json
+appsettings.*.local.json
+.env
+.env.local

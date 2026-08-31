@@ -1,0 +1,48 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = crlf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+
+[*.{cs,csx}]
+indent_size = 4
+
+[*.{json,jsonc,yml,yaml,ts,js,html,scss,css,md}]
+indent_size = 2
+
+[*.cs]
+# Namespaces / usings
+csharp_style_namespace_declarations = file_scoped:warning
+dotnet_sort_system_directives_first = true
+csharp_using_directive_placement = outside_namespace:warning
+
+# Modern language features
+csharp_style_var_for_built_in_types = false:suggestion
+csharp_style_var_when_type_is_apparent = false:suggestion
+csharp_style_var_elsewhere = false:suggestion
+csharp_prefer_braces = true:warning
+csharp_style_prefer_primary_constructors = true:suggestion
+csharp_style_expression_bodied_methods = when_on_single_line:suggestion
+csharp_style_expression_bodied_properties = when_on_single_line:suggestion
+
+# 'Error' is a domain concept here; the VB-keyword collision rule is noise.
+dotnet_diagnostic.CA1716.severity = none
+# Result/Error types are deliberately not localised.
+dotnet_diagnostic.CA1303.severity = none
+# Sealed-by-default is enforced by review, not by the analyser.
+dotnet_diagnostic.CA1852.severity = suggestion
+# Source-generated LoggerMessage delegates are not worth it at this scale.
+dotnet_diagnostic.CA1848.severity = none
+dotnet_diagnostic.CA1873.severity = none
+
+# EF Core scaffolds these; they are not hand-maintained code.
+[**/Persistence/Migrations/*.cs]
+generated_code = true
+dotnet_analyzer_diagnostic.severity = none
+
+# Method_Scenario names are the point in a test project.
+[tests/**/*.cs]
+dotnet_diagnostic.CA1707.severity = none

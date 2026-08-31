@@ -1,0 +1,145 @@
+/* Shared chrome for the sign-in and sign-up screens. */
+
+:host {
+  display: grid;
+  grid-template-columns: 1fr;
+  min-height: 100vh;
+}
+
+@media (width >= 940px) {
+  :host {
+    grid-template-columns: 1.05fr 1fr;
+  }
+}
+
+.form-side {
+  display: grid;
+  place-items: center;
+  padding: var(--space-8) var(--space-5);
+  background: var(--canvas);
+}
+
+.form-wrap {
+  width: 100%;
+  max-width: 400px;
+}
+
+.mobile-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-8);
+  font-size: var(--text-lg);
+  font-weight: 650;
+}
+
+@media (width >= 940px) {
+  .mobile-brand {
+    display: none;
+  }
+}
+
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  background: var(--brand-600);
+  color: #fff;
+}
+
+.form-head {
+  margin-bottom: var(--space-6);
+}
+
+.form-head h2 {
+  font-size: var(--text-2xl);
+}
+
+.form-head p {
+  margin-top: var(--space-2);
+  color: var(--text-muted);
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+form .btn {
+  margin-top: var(--space-2);
+}
+
+.form-foot {
+  margin-top: var(--space-6);
+  text-align: center;
+  color: var(--text-muted);
+  font-size: var(--text-base);
+}
+
+.demo-hint {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
+  padding: var(--space-3) var(--space-4);
+  background: var(--surface);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-md);
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  line-height: 1.6;
+}
+
+.demo-hint app-icon {
+  margin-top: 3px;
+  color: var(--brand-500);
+  flex: none;
+}
+
+.demo-hint code {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text);
+}
+
+.demo-fill {
+  display: block;
+  margin-top: var(--space-1);
+  color: var(--brand-600);
+  font-weight: 550;
+  font-size: var(--text-sm);
+  text-align: left;
+}
+
+.demo-fill:hover {
+  text-decoration: underline;
+}
+
+.strength {
+  display: flex;
+  gap: var(--space-1);
+  margin-top: var(--space-1);
+}
+
+.strength-bar {
+  height: 3px;
+  flex: 1;
+  border-radius: var(--radius-pill);
+  background: var(--border);
+  transition: background-color var(--duration) var(--ease);
+}
+
+.strength-bar.on-weak {
+  background: var(--danger);
+}
+
+.strength-bar.on-fair {
+  background: var(--warning);
+}
+
+.strength-bar.on-strong {
+  background: var(--success);
+}

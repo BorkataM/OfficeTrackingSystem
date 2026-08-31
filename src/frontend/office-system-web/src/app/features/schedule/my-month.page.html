@@ -1,0 +1,103 @@
+<header class="page-head">
+  <div>
+    <h1>My month</h1>
+    <p class="muted">
+      {{ monthLabel() }} in {{ teams.selected()?.name ?? 'your team' }}
+      @if (isCurrentMonth()) {
+        <span class="badge badge-brand">This month</span>
+      }
+    </p>
+  </div>
+
+  <div class="monthnav">
+    <button type="button" class="btn btn-icon btn-secondary" (click)="previousMonth()" aria-label="Previous month">
+      <app-icon name="chevron-left" [size]="17" />
+    </button>
+    <button type="button" class="btn btn-secondary btn-sm" (click)="thisMonth()" [disabled]="isCurrentMonth()">
+      This month
+    </button>
+    <button type="button" class="btn btn-icon btn-secondary" (click)="nextMonth()" aria-label="Next month">
+      <app-icon name="chevron-right" [size]="17" />
+    </button>
+  </div>
+</header>
+
+<div class="tallies">
+  @for (tally of tallies(); track tally.status) {
+    <div class="tally">
+      <span class="chip" [class]="tally.cssClass"><span class="chip-dot"></span>{{ tally.label }}</span>
+      <span class="tally-count">{{ tally.count }}</span>
+      <span class="tally-unit">{{ tally.count === 1 ? 'day' : 'days' }}</span>
+    </div>
+  }
+  <div class="tally total">
+    <span class="text-sm muted">Planned this month</span>
+    <span class="tally-count">{{ plannedCount() }}</span>
+  </div>
+</div>
+
+@if (error(); as message) {
+  <div class="card card-pad">
+    <p class="form-error"><app-icon name="alert" [size]="16" /><span>{{ message }}</span></p>
+  </div>
+} @else {
+  <div class="card month-card" [class.busy]="loading()">
+    <div class="weekdays">
+      @for (name of weekdayNames(); track name) {
+        <span>{{ name }}</span>
+      }
+    </div>
+
+    <div class="month-grid">
+      @for (cell of cells(); track cell.date) {
+        <div
+          class="day"
+          [class.outside]="!cell.inMonth"
+          [class.weekend]="cell.isWeekend"
+          [class.today]="cell.isToday"
+        >
+          <button
+            #day
+            type="button"
+            class="day-button"
+            [class]="cell.status ? describe(cell.status).cssClass : 'day-empty'"
+            [class.open]="editing()?.date === cell.date"
+            [disabled]="!cell.inMonth"
+            (click)="openPicker(cell, day)"
+            [attr.aria-label]="
+              cell.date + ': ' + (cell.status ? describe(cell.status).label : 'not planned')
+            "
+          >
+            <span class="day-number">{{ cell.dayOfMonth }}</span>
+            @if (cell.status) {
+              <span class="day-status">{{ describe(cell.status).label }}</span>
+            }
+            @if (cell.note) {
+              <span class="day-note truncate">{{ cell.note }}</span>
+            }
+          </button>
+        </div>
+      }
+    </div>
+  </div>
+
+  <p class="hint muted text-sm">
+    <app-icon name="info" [size]="14" />
+    Click any day in {{ monthLabel() }} to plan it. Days outside the month are shown for context only.
+  </p>
+}
+
+<!-- Anchored to the clicked day, and free to overhang the calendar. -->
+@if (editing(); as target) {
+  <div class="picker-layer popover" [appAnchoredTo]="target.anchor">
+    <app-status-picker
+      [date]="target.date"
+      [today]="today"
+      [current]="planFor(target.date).status"
+      [note]="planFor(target.date).note"
+      (picked)="pick(target.date, $event)"
+      (cleared)="clear(target.date)"
+      (dismissed)="editing.set(null)"
+    />
+  </div>
+}

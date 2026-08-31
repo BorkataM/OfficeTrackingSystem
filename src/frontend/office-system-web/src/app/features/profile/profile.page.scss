@@ -1,0 +1,97 @@
+.page-head {
+  margin-bottom: var(--space-6);
+}
+
+.page-head h1 {
+  font-size: var(--text-2xl);
+}
+
+.page-head p {
+  margin-top: var(--space-1);
+}
+
+.section {
+  max-width: 620px;
+  margin-bottom: var(--space-5);
+}
+
+.section h2 {
+  font-size: var(--text-lg);
+}
+
+.identity {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.identity-name {
+  font-size: var(--text-lg);
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.section form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-4);
+}
+
+.appearance {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.theme-choices {
+  display: flex;
+  gap: 3px;
+  padding: 3px;
+  background: var(--surface-sunken);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+
+.theme-choice {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 32px;
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  font-weight: 550;
+  transition: background-color var(--duration-fast) var(--ease), color var(--duration-fast) var(--ease);
+}
+
+.theme-choice:hover {
+  color: var(--text);
+}
+
+.theme-choice.selected {
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-xs);
+}
+
+.team-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.team-list li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
+  font-size: var(--text-base);
+  font-weight: 500;
+}
+
+.team-list li + li {
+  border-top: 1px solid var(--border);
+}
