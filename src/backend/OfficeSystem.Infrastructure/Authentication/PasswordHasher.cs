@@ -2,10 +2,10 @@ using OfficeSystem.Application.Abstractions.Authentication;
 
 namespace OfficeSystem.Infrastructure.Authentication;
 
-/// <summary>BCrypt with a per-hash salt and a work factor that is tuned, not defaulted.</summary>
+/// <summary>BCrypt with a per-hash salt and an explicit work factor.</summary>
 internal sealed class PasswordHasher : IPasswordHasher
 {
-    private const int WorkFactor = 12;
+    private const int WorkFactor = 10;
 
     public string Hash(string password) => BCrypt.Net.BCrypt.HashPassword(password, WorkFactor);
 
