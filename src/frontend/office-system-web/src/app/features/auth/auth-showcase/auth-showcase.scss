@@ -55,6 +55,10 @@
   box-shadow: inset 0 0 0 1px rgb(255 255 255 / 18%);
 }
 
+.pitch {
+  margin-block: auto;
+}
+
 .pitch h1 {
   max-width: 18ch;
   font-size: clamp(2rem, 3.4vw, 2.9rem);
