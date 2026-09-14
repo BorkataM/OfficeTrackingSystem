@@ -33,6 +33,11 @@ app.UseWhen(
     context => !context.Request.Path.StartsWithSegments("/api/auth"),
     branch => branch.UseResponseCompression());
 
+// The Angular build is copied into wwwroot by the Dockerfile, so the client is
+// served from the same origin as the API. That is why API_BASE_URL can stay '/api'.
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
 app.UseCors(ApiServiceCollectionExtensions.CorsPolicy);
 app.UseRateLimiter();
 app.UseAuthentication();
@@ -40,5 +45,11 @@ app.UseAuthorization();
 
 app.MapEndpointModules();
 app.MapGet("/health", () => Results.Ok(new { status = "healthy" })).WithTags("Diagnostics");
+
+// Lowest routing precedence, so real endpoints still win. Without it the SPA
+// fallback would answer a mistyped /api route with index.html and a 200.
+app.Map("/api/{*rest}", () => Results.NotFound()).ExcludeFromDescription();
+
+app.MapFallbackToFile("index.html");
 
 await app.RunAsync();

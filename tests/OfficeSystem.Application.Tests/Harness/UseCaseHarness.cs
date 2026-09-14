@@ -44,6 +44,7 @@ public sealed class UseCaseHarness : IAsyncDisposable
             .AddInMemoryCollection(new Dictionary<string, string?>
             {
                 ["ConnectionStrings:Database"] = connectionString,
+                ["Database:Provider"] = DatabaseProviders.Sqlite,
                 ["Jwt:SigningKey"] = "test-signing-key-that-is-long-enough-for-hmac-sha256",
                 ["Jwt:Issuer"] = "office-system-tests",
                 ["Jwt:Audience"] = "office-system-tests",
@@ -67,7 +68,7 @@ public sealed class UseCaseHarness : IAsyncDisposable
 
         await using (AsyncServiceScope scope = provider.CreateAsyncScope())
         {
-            await scope.ServiceProvider.GetRequiredService<OfficeSystemDbContext>().Database.MigrateAsync();
+            await scope.ServiceProvider.GetRequiredService<OfficeSystemDbContext>().Database.EnsureCreatedAsync();
         }
 
         return new UseCaseHarness(keepAlive, provider) { Clock = clock, CurrentUser = currentUser };

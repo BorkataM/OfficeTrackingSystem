@@ -1,0 +1,16 @@
+**/bin/
+**/obj/
+**/node_modules/
+**/dist/
+**/.angular/
+**/*.db
+**/*.db-shm
+**/*.db-wal
+.git/
+.vs/
+.idea/
+tests/
+**/appsettings.Local.json
+**/appsettings.*.local.json
+.env
+.env.local

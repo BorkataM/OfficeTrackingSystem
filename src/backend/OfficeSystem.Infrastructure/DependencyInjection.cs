@@ -28,9 +28,29 @@ public static class DependencyInjection
     private static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration)
     {
         string connectionString = configuration.GetConnectionString("Database")
-                                  ?? "Data Source=officesystem.db";
+                                  ?? throw new InvalidOperationException(
+                                      "Connection string 'Database' is missing.");
 
-        services.AddDbContext<OfficeSystemDbContext>(options => options.UseSqlite(connectionString));
+        string provider = configuration["Database:Provider"] ?? DatabaseProviders.Postgres;
+
+        services.AddDbContext<OfficeSystemDbContext>(options =>
+        {
+            switch (provider.ToLowerInvariant())
+            {
+                case DatabaseProviders.Postgres:
+                    options.UseNpgsql(connectionString);
+                    break;
+
+                case DatabaseProviders.Sqlite:
+                    options.UseSqlite(connectionString);
+                    break;
+
+                default:
+                    throw new InvalidOperationException(
+                        $"Unknown 'Database:Provider' value '{provider}'. " +
+                        $"Expected '{DatabaseProviders.Postgres}' or '{DatabaseProviders.Sqlite}'.");
+            }
+        });
 
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<OfficeSystemDbContext>());
 

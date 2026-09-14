@@ -15,11 +15,11 @@ namespace OfficeSystem.Infrastructure.Persistence.Migrations
                 name: "teams",
                 columns: table => new
                 {
-                    id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    name = table.Column<string>(type: "TEXT", maxLength: 80, nullable: false),
-                    description = table.Column<string>(type: "TEXT", maxLength: 280, nullable: true),
-                    join_code = table.Column<string>(type: "TEXT", maxLength: 8, nullable: false),
-                    created_at_utc = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    name = table.Column<string>(type: "character varying(80)", maxLength: 80, nullable: false),
+                    description = table.Column<string>(type: "character varying(280)", maxLength: 280, nullable: true),
+                    join_code = table.Column<string>(type: "character varying(8)", maxLength: 8, nullable: false),
+                    created_at_utc = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -30,12 +30,12 @@ namespace OfficeSystem.Infrastructure.Persistence.Migrations
                 name: "users",
                 columns: table => new
                 {
-                    id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    email = table.Column<string>(type: "TEXT", maxLength: 256, nullable: false),
-                    display_name = table.Column<string>(type: "TEXT", maxLength: 80, nullable: false),
-                    password_hash = table.Column<string>(type: "TEXT", maxLength: 256, nullable: false),
-                    accent_color = table.Column<string>(type: "TEXT", maxLength: 9, nullable: false),
-                    created_at_utc = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
+                    display_name = table.Column<string>(type: "character varying(80)", maxLength: 80, nullable: false),
+                    password_hash = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
+                    accent_color = table.Column<string>(type: "character varying(9)", maxLength: 9, nullable: false),
+                    created_at_utc = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -46,13 +46,13 @@ namespace OfficeSystem.Infrastructure.Persistence.Migrations
                 name: "attendance_entries",
                 columns: table => new
                 {
-                    id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    team_id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    user_id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    date = table.Column<DateOnly>(type: "TEXT", nullable: false),
-                    status = table.Column<int>(type: "INTEGER", nullable: false),
-                    note = table.Column<string>(type: "TEXT", maxLength: 200, nullable: true),
-                    updated_at_utc = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    team_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    user_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    date = table.Column<DateOnly>(type: "date", nullable: false),
+                    status = table.Column<int>(type: "integer", nullable: false),
+                    note = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
+                    updated_at_utc = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -75,12 +75,12 @@ namespace OfficeSystem.Infrastructure.Persistence.Migrations
                 name: "refresh_tokens",
                 columns: table => new
                 {
-                    id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    user_id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    token_hash = table.Column<string>(type: "TEXT", maxLength: 128, nullable: false),
-                    created_at_utc = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
-                    expires_at_utc = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
-                    revoked_at_utc = table.Column<DateTimeOffset>(type: "TEXT", nullable: true)
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    user_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    token_hash = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
+                    created_at_utc = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    expires_at_utc = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    revoked_at_utc = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -97,11 +97,11 @@ namespace OfficeSystem.Infrastructure.Persistence.Migrations
                 name: "team_memberships",
                 columns: table => new
                 {
-                    id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    team_id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    user_id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    role = table.Column<int>(type: "INTEGER", nullable: false),
-                    joined_at_utc = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    team_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    user_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    role = table.Column<int>(type: "integer", nullable: false),
+                    joined_at_utc = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
