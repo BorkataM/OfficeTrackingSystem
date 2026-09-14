@@ -79,45 +79,6 @@ form .btn {
   font-size: var(--text-base);
 }
 
-.demo-hint {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--space-3);
-  margin-top: var(--space-6);
-  padding: var(--space-3) var(--space-4);
-  background: var(--surface);
-  border: 1px dashed var(--border-strong);
-  border-radius: var(--radius-md);
-  color: var(--text-muted);
-  font-size: var(--text-sm);
-  line-height: 1.6;
-}
-
-.demo-hint app-icon {
-  margin-top: 3px;
-  color: var(--brand-500);
-  flex: none;
-}
-
-.demo-hint code {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: var(--text);
-}
-
-.demo-fill {
-  display: block;
-  margin-top: var(--space-1);
-  color: var(--brand-600);
-  font-weight: 550;
-  font-size: var(--text-sm);
-  text-align: left;
-}
-
-.demo-fill:hover {
-  text-decoration: underline;
-}
-
 .strength {
   display: flex;
   gap: var(--space-1);

@@ -73,15 +73,6 @@ import { AuthShowcase } from './auth-showcase/auth-showcase';
         <p class="form-foot">
           New here? <a routerLink="/sign-up">Create an account</a>
         </p>
-
-        <div class="demo-hint">
-          <app-icon name="sparkles" [size]="16" />
-          <div>
-            The demo database is seeded with a Platform Team. Sign in as
-            <code>ada@example.com</code> with <code>Office123!</code>.
-            <button type="button" class="demo-fill" (click)="fillDemo()">Fill in the demo account</button>
-          </div>
-        </div>
       </div>
     </section>
   `,
@@ -101,10 +92,6 @@ export class SignInPage {
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required]],
   });
-
-  protected fillDemo(): void {
-    this.form.setValue({ email: 'ada@example.com', password: 'Office123!' });
-  }
 
   protected isInvalid(control: 'email' | 'password'): boolean {
     const field = this.form.controls[control];
