@@ -57,8 +57,6 @@ interface PreviewRow {
         <span><i style="background: #94a3b8"></i> Away</span>
       </div>
     </div>
-
-    <p class="foot">Built with .NET&nbsp;10 and Angular&nbsp;20.</p>
   `,
   styleUrl: './auth-showcase.scss',
 })
