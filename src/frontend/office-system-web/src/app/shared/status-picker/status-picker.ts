@@ -38,7 +38,7 @@ export interface StatusChoice {
           [class.selected]="option.status === current()"
           (click)="choose(option.status)"
         >
-          <span class="chip-dot"></span>
+          <span class="option-icon"><app-icon [name]="option.icon" [size]="16" /></span>
           <span class="option-text">
             <span class="option-label">{{ option.label }}</span>
             <span class="option-hint">{{ option.hint }}</span>

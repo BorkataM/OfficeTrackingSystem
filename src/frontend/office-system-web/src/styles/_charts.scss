@@ -4,8 +4,7 @@
  * These are NOT the grid's chip colours. Chip colours are tuned for small text on
  * a chip; chart marks are large fills judged against the chart surface, so each
  * mode gets its own step of the same hue. Every value below was checked with the
- * data-viz validator against this app's surfaces (light #ffffff, dark #141a2e):
- * all-pairs CVD ΔE 9.3 light / 8.9 dark, normal-vision 23.3 / 21.1, all ≥ 3:1.
+ * data-viz validator against this app's surfaces.
  *
  * Only Office, Remote and Travelling are categorical slots. "Away" is absence, not
  * a peer category, so it wears the de-emphasis gray; "Not planned" is the unfilled
@@ -14,35 +13,35 @@
  */
 
 :root {
-  --chart-office: #059669;
-  --chart-remote: #4f46e5;
-  --chart-travelling: #b45309;
+  --chart-office: #17a34a;
+  --chart-remote: #2563eb;
+  --chart-travelling: #d99a00;
   /* Context, not a series. */
-  --chart-away: #8a92a6;
+  --chart-away: #a1a1a8;
   /* The unfilled remainder of a track. */
-  --chart-track: #eceef5;
-  --chart-grid: #e3e6ef;
-  --chart-axis: #cdd2e0;
+  --chart-track: #ececee;
+  --chart-grid: #e6e6e9;
+  --chart-axis: #d2d2d7;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
-    --chart-office: #0e9f70;
-    --chart-remote: #6366f1;
-    --chart-travelling: #cc7c06;
-    --chart-away: #64748b;
-    --chart-track: #1f2740;
-    --chart-grid: #232c44;
-    --chart-axis: #33405e;
+    --chart-office: #22b85a;
+    --chart-remote: #3f78f5;
+    --chart-travelling: #e0a520;
+    --chart-away: #5a5a61;
+    --chart-track: #202024;
+    --chart-grid: #26262a;
+    --chart-axis: #36363b;
   }
 }
 
 :root[data-theme='dark'] {
-  --chart-office: #0e9f70;
-  --chart-remote: #6366f1;
-  --chart-travelling: #cc7c06;
-  --chart-away: #64748b;
-  --chart-track: #1f2740;
-  --chart-grid: #232c44;
-  --chart-axis: #33405e;
+  --chart-office: #22b85a;
+  --chart-remote: #3f78f5;
+  --chart-travelling: #e0a520;
+  --chart-away: #5a5a61;
+  --chart-track: #202024;
+  --chart-grid: #26262a;
+  --chart-axis: #36363b;
 }

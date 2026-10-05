@@ -101,7 +101,7 @@
           (click)="toggleUserMenu()"
           [attr.aria-expanded]="userMenuOpen()"
         >
-          <app-avatar [name]="me.displayName" [color]="me.accentColor" size="sm" />
+          <app-avatar [name]="me.displayName" [color]="me.accentColor" [avatar]="me.avatar" size="sm" />
           <span class="user-text">
             <span class="user-name truncate">{{ me.displayName }}</span>
             <span class="user-email truncate">{{ me.email }}</span>

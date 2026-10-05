@@ -32,4 +32,8 @@ export class AuthApi {
   updateDisplayName(displayName: string): Observable<AuthenticatedUser> {
     return this.http.put<AuthenticatedUser>(`${this.baseUrl}/me`, { displayName });
   }
+
+  changeAvatar(avatar: string | null): Observable<AuthenticatedUser> {
+    return this.http.put<AuthenticatedUser>(`${this.baseUrl}/me/avatar`, { avatar });
+  }
 }

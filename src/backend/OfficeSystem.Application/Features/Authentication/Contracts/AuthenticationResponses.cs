@@ -4,7 +4,8 @@ public sealed record AuthenticatedUserResponse(
     Guid Id,
     string Email,
     string DisplayName,
-    string AccentColor);
+    string AccentColor,
+    string? Avatar);
 
 public sealed record AuthenticationResponse(
     string AccessToken,

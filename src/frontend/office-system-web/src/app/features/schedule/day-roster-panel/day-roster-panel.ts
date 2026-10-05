@@ -7,12 +7,13 @@ import { describeRelativeDay, formatDayMonthLong, formatWeekdayLong } from '../.
 import { LatestRequest } from '../../../core/latest-request';
 import { STATUS_DESCRIPTORS } from '../../../shared/attendance';
 import { Avatar } from '../../../shared/avatar/avatar';
-import { Icon } from '../../../shared/icon/icon';
+import { Icon, IconName } from '../../../shared/icon/icon';
 
 interface RosterGroup {
   readonly key: string;
   readonly label: string;
   readonly cssClass: string;
+  readonly icon: IconName;
   readonly entries: readonly DayRosterEntry[];
 }
 
@@ -53,7 +54,7 @@ interface RosterGroup {
           </div>
           <div class="summary-tile">
             <span class="summary-value">{{ data.totals.travelling }}</span>
-            <span class="summary-label">travelling</span>
+            <span class="summary-label">on vacation</span>
           </div>
           <div class="summary-tile">
             <span class="summary-value">{{ data.totals.away }}</span>
@@ -69,7 +70,7 @@ interface RosterGroup {
           @for (group of groups(); track group.key) {
             <section class="group">
               <h3 class="group-head">
-                <span class="chip" [class]="group.cssClass"><span class="chip-dot"></span>{{ group.label }}</span>
+                <span class="chip" [class]="group.cssClass"><app-icon class="chip-icon" [name]="group.icon" [size]="14" />{{ group.label }}</span>
                 <span class="subtle text-xs">{{ group.entries.length }}</span>
               </h3>
 
@@ -79,6 +80,7 @@ interface RosterGroup {
                     <app-avatar
                       [name]="entry.member.displayName"
                       [color]="entry.member.accentColor"
+                      [avatar]="entry.member.avatar"
                       size="sm"
                     />
                     <span class="person-text">
@@ -134,6 +136,7 @@ export class DayRosterPanel {
       key: descriptor.status,
       label: descriptor.label,
       cssClass: descriptor.cssClass,
+      icon: descriptor.icon,
       entries: data.entries.filter((entry) => entry.status === descriptor.status),
     }));
 
@@ -141,6 +144,7 @@ export class DayRosterPanel {
       key: 'Unplanned',
       label: 'Not planned',
       cssClass: 'status-unplanned',
+      icon: 'circle-dashed',
       entries: data.entries.filter((entry) => entry.status === null),
     };
 

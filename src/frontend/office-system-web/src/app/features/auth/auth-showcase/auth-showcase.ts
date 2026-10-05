@@ -3,7 +3,6 @@ import { Icon } from '../../../shared/icon/icon';
 
 interface PreviewRow {
   readonly name: string;
-  readonly color: string;
   readonly cells: readonly string[];
 }
 
@@ -40,7 +39,6 @@ interface PreviewRow {
         @for (row of rows; track row.name) {
           <div class="preview-row">
             <span class="preview-name">
-              <i class="preview-dot" [style.background]="row.color"></i>
               {{ row.name }}
             </span>
             @for (cell of row.cells; track $index) {
@@ -51,10 +49,10 @@ interface PreviewRow {
       </div>
 
       <div class="legend">
-        <span><i style="background: #34d399"></i> In office</span>
-        <span><i style="background: #818cf8"></i> Remote</span>
-        <span><i style="background: #fbbf24"></i> Travelling</span>
-        <span><i style="background: #94a3b8"></i> Away</span>
+        <span><i class="office"></i> In office</span>
+        <span><i class="remote"></i> Remote</span>
+        <span><i class="travel"></i> Vacation</span>
+        <span><i class="away"></i> Away</span>
       </div>
     </div>
   `,
@@ -62,9 +60,9 @@ interface PreviewRow {
 })
 export class AuthShowcase {
   protected readonly rows: readonly PreviewRow[] = [
-    { name: 'Ada', color: '#f97316', cells: ['office', 'office', 'remote', 'office', 'remote'] },
-    { name: 'Grace', color: '#ec4899', cells: ['remote', 'office', 'office', 'remote', 'away'] },
-    { name: 'Alan', color: '#a855f7', cells: ['office', 'travel', 'travel', 'office', 'office'] },
-    { name: 'Katherine', color: '#ef4444', cells: ['away', 'away', 'office', 'office', 'remote'] },
+    { name: 'Ada', cells: ['office', 'office', 'remote', 'office', 'remote'] },
+    { name: 'Grace', cells: ['remote', 'office', 'office', 'remote', 'away'] },
+    { name: 'Alan', cells: ['office', 'travel', 'travel', 'office', 'office'] },
+    { name: 'Katherine', cells: ['away', 'away', 'office', 'office', 'remote'] },
   ];
 }

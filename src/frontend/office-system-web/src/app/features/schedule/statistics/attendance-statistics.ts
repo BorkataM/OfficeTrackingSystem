@@ -77,7 +77,7 @@ export class AttendanceStatisticsPanel {
     const rows: Omit<LegendRow, 'percentage'>[] = [
       { key: 'Office', label: 'In office', value: stats.totals.office, color: 'var(--chart-office)' },
       { key: 'Remote', label: 'Remote', value: stats.totals.remote, color: 'var(--chart-remote)' },
-      { key: 'Travelling', label: 'Travelling', value: stats.totals.travelling, color: 'var(--chart-travelling)' },
+      { key: 'Travelling', label: 'Vacation', value: stats.totals.travelling, color: 'var(--chart-travelling)' },
       { key: 'Away', label: 'Away', value: stats.totals.away, color: 'var(--chart-away)' },
     ];
 

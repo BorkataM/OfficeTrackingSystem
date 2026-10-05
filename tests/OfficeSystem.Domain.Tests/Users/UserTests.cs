@@ -44,6 +44,48 @@ public sealed class UserTests
     }
 
     [Fact]
+    public void ChangeAvatar_StoresAKnownStyleAndSeed()
+    {
+        User user = Register();
+
+        Result result = user.ChangeAvatar("notionists:k3j9");
+
+        result.IsSuccess.Should().BeTrue();
+        user.Avatar.Should().Be("notionists:k3j9");
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("  ")]
+    public void ChangeAvatar_ClearsTheAvatarWhenBlank(string? avatar)
+    {
+        User user = Register();
+        user.ChangeAvatar("thumbs:abc");
+
+        Result result = user.ChangeAvatar(avatar);
+
+        result.IsSuccess.Should().BeTrue();
+        user.Avatar.Should().BeNull();
+    }
+
+    [Theory]
+    [InlineData("adventurer:abc")]
+    [InlineData("notionists")]
+    [InlineData("notionists:")]
+    [InlineData("notionists:has space")]
+    [InlineData("https://example.com/me.png")]
+    public void ChangeAvatar_RejectsAnUnknownOrMalformedValue(string avatar)
+    {
+        User user = Register();
+
+        Result result = user.ChangeAvatar(avatar);
+
+        result.Error.Should().Be(UserErrors.AvatarInvalid);
+        user.Avatar.Should().BeNull();
+    }
+
+    [Fact]
     public void IssueRefreshToken_AddsAnActiveToken()
     {
         User user = Register();

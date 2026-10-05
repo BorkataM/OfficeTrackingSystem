@@ -15,6 +15,7 @@ public sealed record TeamMemberResponse(
     string DisplayName,
     string Email,
     string AccentColor,
+    string? Avatar,
     TeamRole Role,
     DateTimeOffset JoinedAtUtc);
 

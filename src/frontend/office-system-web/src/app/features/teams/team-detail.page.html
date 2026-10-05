@@ -101,7 +101,7 @@
     <ul class="members">
       @for (member of data.members; track member.userId) {
         <li class="member">
-          <app-avatar [name]="member.displayName" [color]="member.accentColor" size="lg" />
+          <app-avatar [name]="member.displayName" [color]="member.accentColor" [avatar]="member.avatar" size="lg" />
 
           <div class="member-text">
             <span class="member-name">

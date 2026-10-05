@@ -6,6 +6,7 @@ using OfficeSystem.Application.Features.Authentication.Login;
 using OfficeSystem.Application.Features.Authentication.RefreshSession;
 using OfficeSystem.Application.Features.Authentication.Register;
 using OfficeSystem.Application.Features.Authentication.SignOut;
+using OfficeSystem.Application.Features.Authentication.ChangeAvatar;
 using OfficeSystem.Application.Features.Authentication.UpdateProfile;
 
 namespace OfficeSystem.Api.Endpoints;
@@ -76,6 +77,16 @@ internal sealed class AuthenticationEndpoints : IEndpointModule
                 (await dispatcher.SendAsync(command, cancellationToken)).ToHttpResult())
             .RequireAuthorization()
             .WithSummary("Updates the signed-in user's display name.")
+            .Produces<AuthenticatedUserResponse>()
+            .ProducesValidationProblem();
+
+        group.MapPut("/me/avatar", async (
+                ChangeAvatarCommand command,
+                IDispatcher dispatcher,
+                CancellationToken cancellationToken) =>
+                (await dispatcher.SendAsync(command, cancellationToken)).ToHttpResult())
+            .RequireAuthorization()
+            .WithSummary("Sets the signed-in user's generated avatar, or clears it when none is supplied.")
             .Produces<AuthenticatedUserResponse>()
             .ProducesValidationProblem();
     }

@@ -19,6 +19,7 @@ export interface AuthenticatedUser {
   readonly email: string;
   readonly displayName: string;
   readonly accentColor: string;
+  readonly avatar: string | null;
 }
 
 export interface AuthenticationResult {
@@ -42,6 +43,7 @@ export interface TeamMember {
   readonly displayName: string;
   readonly email: string;
   readonly accentColor: string;
+  readonly avatar: string | null;
   readonly role: TeamRole;
   readonly joinedAtUtc: string;
 }

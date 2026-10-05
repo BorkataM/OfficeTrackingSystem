@@ -26,6 +26,10 @@ export class AuthService {
     return this.api.updateDisplayName(displayName).pipe(tap((user) => this.session.updateUser(user)));
   }
 
+  changeAvatar(avatar: string | null): Observable<AuthenticatedUser> {
+    return this.api.changeAvatar(avatar).pipe(tap((user) => this.session.updateUser(user)));
+  }
+
   /**
    * Clears the local session first, then tells the server. The order matters: this
    * tab is signed out even if the network call fails.

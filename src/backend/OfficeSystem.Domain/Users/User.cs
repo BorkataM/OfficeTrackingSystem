@@ -38,6 +38,9 @@ public sealed class User : Entity, IAggregateRoot
     /// <summary>Deterministic avatar colour, derived once at registration so the UI stays stable.</summary>
     public string AccentColor { get; private set; }
 
+    /// <summary>A generated avatar as "style:seed", or null to show initials.</summary>
+    public string? Avatar { get; private set; }
+
     public DateTimeOffset CreatedAtUtc { get; private set; }
 
     public IReadOnlyCollection<RefreshToken> RefreshTokens => _refreshTokens.AsReadOnly();
@@ -66,6 +69,25 @@ public sealed class User : Entity, IAggregateRoot
         }
 
         DisplayName = name.Value;
+
+        return Result.Success();
+    }
+
+    public Result ChangeAvatar(string? avatar)
+    {
+        if (string.IsNullOrWhiteSpace(avatar))
+        {
+            Avatar = null;
+
+            return Result.Success();
+        }
+
+        if (!AvatarChoice.IsValid(avatar))
+        {
+            return Result.Failure(UserErrors.AvatarInvalid);
+        }
+
+        Avatar = avatar;
 
         return Result.Success();
     }

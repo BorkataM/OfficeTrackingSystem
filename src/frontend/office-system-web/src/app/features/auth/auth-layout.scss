@@ -29,8 +29,10 @@
   align-items: center;
   gap: var(--space-3);
   margin-bottom: var(--space-8);
+  font-family: var(--font-display);
   font-size: var(--text-lg);
-  font-weight: 650;
+  font-weight: 600;
+  letter-spacing: -0.02em;
 }
 
 @media (width >= 940px) {
@@ -45,8 +47,8 @@
   width: 36px;
   height: 36px;
   border-radius: var(--radius-sm);
-  background: var(--brand-600);
-  color: #fff;
+  background: var(--text);
+  color: var(--canvas);
 }
 
 .form-head {

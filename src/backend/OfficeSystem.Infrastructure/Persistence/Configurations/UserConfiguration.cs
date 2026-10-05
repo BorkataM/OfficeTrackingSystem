@@ -31,6 +31,9 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
             .HasMaxLength(9)
             .IsRequired();
 
+        builder.Property(u => u.Avatar)
+            .HasMaxLength(AvatarChoice.MaxLength);
+
         builder.Property(u => u.CreatedAtUtc).IsRequired();
 
         builder.HasMany(u => u.RefreshTokens)

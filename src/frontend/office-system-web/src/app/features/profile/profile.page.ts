@@ -6,6 +6,7 @@ import { TeamStore } from '../../core/teams/team.store';
 import { ThemeService } from '../../core/theme/theme.service';
 import { ToastService } from '../../core/ui/toast.service';
 import { Avatar } from '../../shared/avatar/avatar';
+import { AVATAR_STYLES, randomSeed } from '../../shared/avatar/avatar-styles';
 import { Icon } from '../../shared/icon/icon';
 
 @Component({
@@ -20,10 +21,68 @@ import { Icon } from '../../shared/icon/icon';
 
     @if (user(); as me) {
       <section class="card card-pad section identity">
-        <app-avatar [name]="me.displayName" [color]="me.accentColor" size="lg" />
+        <app-avatar [name]="me.displayName" [color]="me.accentColor" [avatar]="draftAvatar()" size="xl" />
         <div>
           <p class="identity-name">{{ me.displayName }}</p>
           <p class="muted text-sm">{{ me.email }}</p>
+        </div>
+      </section>
+
+      <section class="card card-pad section avatar-section">
+        <div class="panel-title">
+          <div>
+            <h2>Avatar</h2>
+            <p class="muted text-sm">Pick a style, then the one that feels like you.</p>
+          </div>
+        </div>
+
+        <div class="theme-choices style-choices" role="group" aria-label="Avatar style">
+          <button
+            type="button"
+            class="theme-choice"
+            [class.selected]="pickerStyle() === null"
+            (click)="useInitials()"
+          >
+            Initials
+          </button>
+          @for (style of avatarStyles; track style.id) {
+            <button
+              type="button"
+              class="theme-choice"
+              [class.selected]="pickerStyle() === style.id"
+              (click)="chooseStyle(style.id)"
+            >
+              {{ style.label }}
+            </button>
+          }
+        </div>
+
+        @if (pickerStyle(); as style) {
+          <div class="avatar-grid" role="group" aria-label="Avatar options">
+            @for (seed of seeds(); track seed) {
+              <button
+                type="button"
+                class="avatar-option"
+                [class.selected]="draftAvatar() === style + ':' + seed"
+                (click)="draftAvatar.set(style + ':' + seed)"
+                [attr.aria-pressed]="draftAvatar() === style + ':' + seed"
+              >
+                <app-avatar [name]="me.displayName" [color]="me.accentColor" [avatar]="style + ':' + seed" size="lg" />
+              </button>
+            }
+          </div>
+        }
+
+        <div class="avatar-actions">
+          @if (pickerStyle()) {
+            <button type="button" class="btn btn-secondary" (click)="shuffle()">
+              <app-icon name="refresh" [size]="15" />
+              Shuffle
+            </button>
+          }
+          <button type="button" class="btn btn-primary" (click)="saveAvatar()" [disabled]="avatarBusy() || !avatarChanged()">
+            {{ avatarBusy() ? 'Saving…' : 'Save avatar' }}
+          </button>
         </div>
       </section>
 
@@ -107,6 +166,13 @@ export class ProfilePage {
   protected readonly user = this.auth.user;
   protected readonly busy = signal(false);
 
+  protected readonly avatarStyles = AVATAR_STYLES;
+  protected readonly draftAvatar = signal<string | null>(this.user()?.avatar ?? null);
+  protected readonly pickerStyle = signal<string | null>(this.user()?.avatar?.split(':')[0] ?? null);
+  protected readonly seeds = signal<readonly string[]>(this.initialSeeds());
+  protected readonly avatarBusy = signal(false);
+  protected readonly avatarChanged = computed(() => this.draftAvatar() !== (this.user()?.avatar ?? null));
+
   protected readonly themeOptions = [
     { value: 'light' as const, label: 'Light', icon: 'sun' as const },
     { value: 'dark' as const, label: 'Dark', icon: 'moon' as const },
@@ -145,4 +211,44 @@ export class ProfilePage {
       },
     });
   }
+
+  protected chooseStyle(style: string): void {
+    this.pickerStyle.set(style);
+    this.seeds.set(freshSeeds());
+    this.draftAvatar.set(`${style}:${this.seeds()[0]}`);
+  }
+
+  protected useInitials(): void {
+    this.pickerStyle.set(null);
+    this.draftAvatar.set(null);
+  }
+
+  protected shuffle(): void {
+    this.seeds.set(freshSeeds());
+  }
+
+  protected saveAvatar(): void {
+    this.avatarBusy.set(true);
+
+    this.auth.changeAvatar(this.draftAvatar()).subscribe({
+      next: () => {
+        this.avatarBusy.set(false);
+        this.toasts.success('Your avatar has been updated.');
+      },
+      error: (error: unknown) => {
+        this.avatarBusy.set(false);
+        this.toasts.error(errorMessageOf(error));
+      },
+    });
+  }
+
+  private initialSeeds(): readonly string[] {
+    const current = this.user()?.avatar?.split(':')[1];
+
+    return current ? [current, ...freshSeeds().slice(1)] : freshSeeds();
+  }
+}
+
+function freshSeeds(): readonly string[] {
+  return Array.from({ length: 12 }, randomSeed);
 }

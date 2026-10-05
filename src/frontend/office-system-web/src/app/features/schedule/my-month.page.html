@@ -25,7 +25,7 @@
 <div class="tallies">
   @for (tally of tallies(); track tally.status) {
     <div class="tally">
-      <span class="chip" [class]="tally.cssClass"><span class="chip-dot"></span>{{ tally.label }}</span>
+      <span class="chip" [class]="tally.cssClass"><app-icon class="chip-icon" [name]="tally.icon" [size]="14" />{{ tally.label }}</span>
       <span class="tally-count">{{ tally.count }}</span>
       <span class="tally-unit">{{ tally.count === 1 ? 'day' : 'days' }}</span>
     </div>

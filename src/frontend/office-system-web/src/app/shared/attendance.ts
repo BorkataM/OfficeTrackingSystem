@@ -1,9 +1,11 @@
 import { AttendanceStatus, TeamRole } from '../core/api/api.models';
+import { IconName } from './icon/icon';
 
 export interface StatusDescriptor {
   readonly status: AttendanceStatus;
   readonly label: string;
   readonly cssClass: string;
+  readonly icon: IconName;
   readonly hint: string;
 }
 
@@ -12,25 +14,29 @@ const DESCRIPTORS: Readonly<Record<AttendanceStatus, StatusDescriptor>> = {
     status: 'Office',
     label: 'In office',
     cssClass: 'status-office',
+    icon: 'building',
     hint: 'At a desk in the office',
   },
   Remote: {
     status: 'Remote',
     label: 'Remote',
     cssClass: 'status-remote',
+    icon: 'laptop',
     hint: 'Working, but not from the office',
   },
   Travelling: {
     status: 'Travelling',
-    label: 'Travelling',
+    label: 'Vacation',
     cssClass: 'status-travelling',
-    hint: 'Customer visit, conference or another site',
+    icon: 'plane',
+    hint: 'Time off, out of office',
   },
   Away: {
     status: 'Away',
     label: 'Away',
     cssClass: 'status-away',
-    hint: 'Holiday, sick leave or a public holiday',
+    icon: 'umbrella',
+    hint: 'Sick leave or a public holiday',
   },
 };
 

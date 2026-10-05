@@ -287,6 +287,13 @@
   background: var(--brand-50);
 }
 
+.member.me app-avatar {
+  display: inline-flex;
+  border-radius: 50%;
+  outline: 2px solid var(--brand-500);
+  outline-offset: 2px;
+}
+
 .member-text {
   display: flex;
   flex-direction: column;

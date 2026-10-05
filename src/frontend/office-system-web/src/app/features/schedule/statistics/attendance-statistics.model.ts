@@ -25,6 +25,7 @@ export interface MemberAttendance extends StatusTotals {
   readonly userId: string;
   readonly displayName: string;
   readonly accentColor: string;
+  readonly avatar: string | null;
   /** Days with any status set. */
   readonly planned: number;
   /** Office days as a share of the period's working days. */
@@ -98,6 +99,7 @@ export function summarise(schedule: TeamSchedule): AttendanceStatistics {
         userId: row.member.userId,
         displayName: row.member.displayName,
         accentColor: row.member.accentColor,
+        avatar: row.member.avatar,
         ...totals,
         planned,
         officeRate: workdays.length === 0 ? 0 : totals.office / workdays.length,

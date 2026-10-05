@@ -25,7 +25,6 @@ body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-feature-settings: 'cv11', 'ss01';
   transition: background-color var(--duration) var(--ease), color var(--duration) var(--ease);
 }
 
@@ -33,9 +32,10 @@ h1,
 h2,
 h3,
 h4 {
-  font-weight: 650;
-  line-height: 1.2;
-  letter-spacing: -0.015em;
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
 }
 
 h1 {
@@ -82,6 +82,7 @@ a {
 
 a:hover {
   text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 ul,

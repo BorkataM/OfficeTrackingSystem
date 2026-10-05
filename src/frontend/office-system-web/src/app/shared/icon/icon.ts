@@ -25,7 +25,18 @@ export type IconName =
   | 'info'
   | 'alert'
   | 'grid'
-  | 'user';
+  | 'user'
+  | 'laptop'
+  | 'plane'
+  | 'umbrella'
+  | 'circle-dashed'
+  | 'chart-bar'
+  | 'chart-pie'
+  | 'trending-up'
+  | 'trophy'
+  | 'table'
+  | 'calendar-check'
+  | 'percent';
 
 /**
  * A hand-picked inline icon set. Inlining keeps the bundle free of an icon-font
@@ -65,6 +76,21 @@ const PATHS: Readonly<Record<IconName, string>> = {
   grid:
     '<rect x="3" y="3" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="2"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="2"/>',
   user: '<circle cx="12" cy="8" r="3.6"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0"/>',
+  laptop: '<rect x="4" y="5" width="16" height="11" rx="1.8"/><path d="M2 19h20"/>',
+  plane:
+    '<path d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/>',
+  umbrella: '<path d="M22 12a10 10 0 0 0-20 0z"/><path d="M12 12v7a2 2 0 0 0 4 0M12 2v1"/>',
+  'circle-dashed':
+    '<path d="M8.6 3.7a9 9 0 0 1 6.8 0M20.3 8.6a9 9 0 0 1 0 6.8M15.4 20.3a9 9 0 0 1-6.8 0M3.7 15.4a9 9 0 0 1 0-6.8"/>',
+  'chart-bar': '<path d="M4 20h16"/><rect x="5" y="11" width="3.5" height="6.5" rx="1"/><rect x="10.25" y="6" width="3.5" height="11.5" rx="1"/><rect x="15.5" y="9" width="3.5" height="8.5" rx="1"/>',
+  'chart-pie': '<path d="M12 3a9 9 0 1 0 9 9h-9z"/><path d="M15 3.5A9 9 0 0 1 20.5 9H15z"/>',
+  'trending-up': '<path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/>',
+  trophy:
+    '<path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4.5a2.5 2.5 0 0 0 2.5 4M17 6h2.5a2.5 2.5 0 0 1-2.5 4"/>',
+  table: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M3 15h18M9 10v10"/>',
+  'calendar-check':
+    '<rect x="3" y="4.5" width="18" height="16" rx="2.5"/><path d="M3 9.5h18M8 3v3M16 3v3M9 15l2 2 4-4"/>',
+  percent: '<path d="M19 5L5 19"/><circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="17" r="2.5"/>',
 };
 
 @Component({

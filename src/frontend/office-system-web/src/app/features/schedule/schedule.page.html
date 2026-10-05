@@ -1,7 +1,8 @@
 <header class="page-head">
   <div class="page-title">
-    <h1>{{ teams.selected()?.name ?? 'Schedule' }}</h1>
+    <h1 class="heading-with-icon"><app-icon name="users" [size]="24" />{{ teams.selected()?.name ?? 'Schedule' }}</h1>
     <p class="muted">
+      <app-icon name="calendar" [size]="15" />
       Week {{ weekNumber() }} · {{ weekLabel() }}
       @if (isCurrentWeek()) {
         <span class="badge badge-brand">This week</span>
@@ -28,6 +29,7 @@
       (click)="toggleWeekends()"
       [attr.aria-pressed]="includeWeekends()"
     >
+      <app-icon name="calendar" [size]="15" />
       {{ includeWeekends() ? 'Hide weekends' : 'Show weekends' }}
     </button>
 
@@ -39,7 +41,7 @@
         [disabled]="saving() || !view()"
         [attr.aria-expanded]="quickOpen()"
       >
-        <app-icon name="sparkles" [size]="15" />
+        <app-icon name="calendar-check" [size]="15" />
         Plan my week
         <app-icon name="chevron-down" [size]="14" />
       </button>
@@ -49,7 +51,7 @@
           <p class="menu-label">Mark every weekday as</p>
           @for (option of statuses; track option.status) {
             <button type="button" class="quick-item" (click)="fillWeekdays(option.status)">
-              <span class="chip" [class]="option.cssClass"><span class="chip-dot"></span>{{ option.label }}</span>
+              <span class="chip" [class]="option.cssClass"><app-icon class="chip-icon" [name]="option.icon" [size]="14" />{{ option.label }}</span>
             </button>
           }
           <div class="menu-divider"></div>
@@ -128,7 +130,7 @@
           <!-- Member rows -->
           @for (row of model.rows; track row.member.userId) {
             <div class="cell member" [class.me]="row.isMe" role="rowheader">
-              <app-avatar [name]="row.member.displayName" [color]="row.member.accentColor" size="sm" />
+              <app-avatar [name]="row.member.displayName" [color]="row.member.accentColor" [avatar]="row.member.avatar" size="sm" />
               <span class="member-text">
                 <span class="member-name truncate">
                   {{ row.isMe ? 'You' : row.member.displayName }}
@@ -158,7 +160,7 @@
                     [attr.title]="cell.note ?? (cell.status ? describe(cell.status).label : 'Click to plan')"
                   >
                     @if (cell.status) {
-                      <span class="chip-dot"></span>
+                      <app-icon class="chip-icon" [name]="describe(cell.status).icon" [size]="15" />
                       <span class="slot-label">{{ describe(cell.status).label }}</span>
                     } @else {
                       <app-icon name="plus" [size]="14" />
@@ -181,7 +183,7 @@
                     [attr.title]="cell.note ?? (cell.status ? describe(cell.status).label : 'Not planned')"
                   >
                     @if (cell.status) {
-                      <span class="chip-dot"></span>
+                      <app-icon class="chip-icon" [name]="describe(cell.status).icon" [size]="15" />
                       <span class="slot-label">{{ describe(cell.status).label }}</span>
                     } @else {
                       <span class="slot-label subtle">–</span>
@@ -199,9 +201,9 @@
 
       <footer class="grid-legend">
         @for (option of statuses; track option.status) {
-          <span class="chip" [class]="option.cssClass"><span class="chip-dot"></span>{{ option.label }}</span>
+          <span class="chip" [class]="option.cssClass"><app-icon class="chip-icon" [name]="option.icon" [size]="14" />{{ option.label }}</span>
         }
-        <span class="chip status-unplanned"><span class="chip-dot"></span>Not planned</span>
+        <span class="chip status-unplanned"><app-icon class="chip-icon" name="circle-dashed" [size]="14" />Not planned</span>
         <span class="grow"></span>
         <span class="legend-hint">Click any cell in your own row to plan it.</span>
       </footer>

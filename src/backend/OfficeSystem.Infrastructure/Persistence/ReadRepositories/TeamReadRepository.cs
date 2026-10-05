@@ -102,6 +102,7 @@ internal sealed class TeamReadRepository(OfficeSystemDbContext context) : ITeamR
                 x.User.DisplayName,
                 x.User.Email.Value,
                 x.User.AccentColor,
+                x.User.Avatar,
                 x.Membership.Role,
                 x.Membership.JoinedAtUtc))
             .ToListAsync(cancellationToken)

@@ -21,7 +21,7 @@ import { LatestRequest } from '../../core/latest-request';
 import { TeamStore } from '../../core/teams/team.store';
 import { ToastService } from '../../core/ui/toast.service';
 import { STATUS_DESCRIPTORS, describeStatus } from '../../shared/attendance';
-import { Icon } from '../../shared/icon/icon';
+import { Icon, IconName } from '../../shared/icon/icon';
 import { AnchoredTo } from '../../shared/popover/anchored-to';
 import { StatusChoice, StatusPicker } from '../../shared/status-picker/status-picker';
 import { PlanChange, partitionChanges, withDayPlanChanges } from './plan-mutations';
@@ -40,6 +40,7 @@ interface StatusTally {
   readonly status: AttendanceStatus;
   readonly label: string;
   readonly cssClass: string;
+  readonly icon: IconName;
   readonly count: number;
 }
 
@@ -124,6 +125,7 @@ export class MyMonthPage {
       status: descriptor.status,
       label: descriptor.label,
       cssClass: descriptor.cssClass,
+      icon: descriptor.icon,
       count: inMonth.filter((plan) => plan.status === descriptor.status).length,
     }));
   });

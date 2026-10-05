@@ -22,6 +22,9 @@ public static class UserErrors
     public static readonly Error DisplayNameTooLong = Error.Validation(
         "user.displayName.tooLong", $"A display name may not exceed {User.DisplayNameMaxLength} characters.");
 
+    public static readonly Error AvatarInvalid = Error.Validation(
+        "user.avatar.invalid", "That avatar is not one of the available styles.");
+
     public static readonly Error PasswordTooShort = Error.Validation(
         "user.password.tooShort", $"A password must be at least {User.PasswordMinLength} characters long.");
 

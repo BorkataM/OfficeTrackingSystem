@@ -73,27 +73,34 @@
   color: var(--status-away-text);
 }
 
-.option .chip-dot {
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
+.option-icon {
+  display: grid;
+  place-items: center;
   flex: none;
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-sunken);
 }
 
-.option.status-office .chip-dot {
-  background: var(--status-office);
+.option.status-office .option-icon {
+  background: var(--status-office-soft);
+  color: var(--status-office);
 }
 
-.option.status-remote .chip-dot {
-  background: var(--status-remote);
+.option.status-remote .option-icon {
+  background: var(--status-remote-soft);
+  color: var(--status-remote);
 }
 
-.option.status-travelling .chip-dot {
-  background: var(--status-travelling);
+.option.status-travelling .option-icon {
+  background: var(--status-travelling-soft);
+  color: var(--status-travelling);
 }
 
-.option.status-away .chip-dot {
-  background: var(--status-away);
+.option.status-away .option-icon {
+  background: var(--status-away-soft);
+  color: var(--status-away);
 }
 
 .option-text {

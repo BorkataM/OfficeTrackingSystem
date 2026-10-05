@@ -32,5 +32,5 @@ internal sealed class AuthenticationSessionFactory(ITokenProvider tokenProvider,
             Describe(user));
 
     public static AuthenticatedUserResponse Describe(User user)
-        => new(user.Id, user.Email.Value, user.DisplayName, user.AccentColor);
+        => new(user.Id, user.Email.Value, user.DisplayName, user.AccentColor, user.Avatar);
 }
